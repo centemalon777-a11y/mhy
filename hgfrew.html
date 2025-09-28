@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard - LearnHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body { font-family:'Poppins',sans-serif; background: linear-gradient(135deg,#0ea5e9,#1e293b); color:#fff; margin:0; padding:0; }
+header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:rgba(0,0,0,0.4);}
+header h1 {font-size:1.8rem;color:#38bdf8;}
+header button {padding:8px 12px;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;}
+nav { display:flex; justify-content:center; background:rgba(0,0,0,0.3);}
+nav button {background:transparent;border:none;color:#fff;padding:12px 20px;cursor:pointer;font-weight:600; transition:0.3s;}
+nav button.active, nav button:hover {background:rgba(0,0,0,0.5);border-radius:8px;}
+.container {max-width:1100px;margin:20px auto;padding:0 15px;}
+.section {display:none;}
+.section.active {display:block;}
+.card {background:rgba(0,0,0,0.25);padding:20px;border-radius:12px;margin-bottom:20px;}
+.messages, .event-list {max-height:400px;overflow:auto;margin-top:15px;border-radius:10px;background:rgba(0,0,0,0.15);padding:15px;}
+.msg {padding:10px 15px;border-radius:10px;margin-bottom:12px;max-width:70%;clear:both;}
+.msg.admin{background:#0ea5e9; float:left;}
+.msg.student{background:#22c55e; float:right;}
+.msg small{display:block;font-size:0.75rem;margin-top:4px;color:#e2e8f0;}
+.register-btn {padding:8px 12px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;cursor:pointer;}
+.register-btn.registered {background:#22c55e;cursor:default;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Student Dashboard</h1>
+  <button id="logoutBtn">Logout</button>
+</header>
+
+<nav>
+  <button class="nav-btn active" data-section="messagesSection">Messages</button>
+  <button class="nav-btn" data-section="eventsSection">Upcoming Tests</button>
+</nav>
+
+<div class="container">
+  <!-- Messages Section -->
+  <div class="section active" id="messagesSection">
+    <div class="card">
+      <

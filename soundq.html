@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0c4a6e, #0284c7, #38bdf8);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+const quizData = [
+  {
+    question: "What is sound?",
+    options: [
+      "A form of energy produced by vibrating objects",
+      "A type of light",
+      "A kind of force",
+      "A form of matter"
+    ],
+    answer: "A form of energy produced by vibrating objects"
+  },
+  {
+    question: "Sound travels fastest in which medium?",
+    options: ["Solid", "Liquid", "Gas", "Vacuum"],
+    answer: "Solid"
+  },
+  {
+    question: "Which of the following cannot transmit sound?",
+    options: ["Vacuum", "Air", "Water", "Iron"],
+    answer: "Vacuum"
+  },
+  {
+    question: "The SI unit of frequency is?",
+    options: ["Hertz", "Decibel", "Meter", "Watt"],
+    answer: "Hertz"
+  },
+  {
+    question: "The speed of sound in air at room temperature is approximately?",
+    options: ["340 m/s", "3 x 10^8 m/s", "1500 m/s", "5000 m/s"],
+    answer: "340 m/s"
+  },
+  {
+    question: "Which property of sound determines its loudness?",
+    options: ["Amplitude", "Frequency", "Wavelength", "Speed"],
+    answer: "Amplitude"
+  },
+  {
+    question: "Which property of sound determines its pitch?",
+    options: ["Frequency", "Amplitude", "Wavelength", "Speed"],
+    answer: "Frequency"
+  },
+  {
+    question: "What is the range of audible frequencies for humans?",
+    options: [
+      "20 Hz to 20,000 Hz",
+      "2 Hz to 2,000 Hz",
+      "200 Hz to 2,000 Hz",
+      "20 Hz to 2,000 Hz"
+    ],
+    answer: "20 Hz to 20,000 Hz"
+  },
+  {
+    question: "Sounds with frequencies above 20,000 Hz are called?",
+    options: ["Ultrasound", "Infrasound", "Supersound", "Megasound"],
+    answer: "Ultrasound"
+  },
+  {
+    question: "Sounds with frequencies below 20 Hz are called?",
+    options: ["Infrasound", "Ultrasound", "Supersound", "Megasound"],
+    answer: "Infrasound"
+  },
+  {
+    question: "Which instrument is used to measure the intensity of sound?",
+    options: ["Sound level meter", "Thermometer", "Barometer", "Manometer"],
+    answer: "Sound level meter"
+  },
+  {
+    question: "The unit of sound intensity is?",
+    options: ["Decibel", "Hertz", "Watt", "Meter"],
+    answer: "Decibel"
+  },
+  {
+    question: "Which of the following is NOT a characteristic of sound?",
+    options: [
+      "It requires a medium",
+      "It travels in straight lines",
+      "It can travel through vacuum",
+      "It is a longitudinal wave"
+    ],
+    answer: "It can travel through vacuum"
+  },
+  {
+    question: "Which of the following is a longitudinal wave?",
+    options: ["Sound", "Light", "X-rays", "Radio waves"],
+    answer: "Sound"
+  },
+  {
+    question: "Which of the following is a transverse wave?",
+    options: ["Light", "Sound", "Ultrasound", "Infrasound"],
+    answer: "Light"
+  },
+  {
+    question: "What is the phenomenon of sound bouncing back from a surface called?",
+    options: ["Echo", "Refraction", "Diffraction", "Absorption"],
+    answer: "Echo"
+  },
+  {
+    question: "The minimum distance required to hear an echo in air is about?",
+    options: ["17 m", "1.7 m", "170 m", "0.17 m"],
+    answer: "17 m"
+  },
+  {
+    question: "Which of the following affects the speed of sound in air?",
+    options: ["Temperature", "Color", "Frequency", "Loudness"],
+    answer: "Temperature"
+  },
+  {
+    question: "Which of the following does NOT affect the speed of sound?",
+    options: ["Color of medium", "Temperature", "Density", "Elasticity"],
+    answer: "Color of medium"
+  },
+  {
+    question: "Which of the following is used in SONAR?",
+    options: ["Ultrasound", "Infrasound", "Light", "Radio waves"],
+    answer: "Ultrasound"
+  },
+  {
+    question: "Which part of the ear detects sound vibrations?",
+    options: ["Eardrum", "Pupil", "Retina", "Tongue"],
+    answer: "Eardrum"
+  },
+  {
+    question: "Which of the following is NOT a use of ultrasound?",
+    options: [
+      "Cooking food",
+      "Medical imaging",
+      "Cleaning delicate objects",
+      "Detecting cracks in metals"
+    ],
+    answer: "Cooking food"
+  },
+  {
+    question: "The time taken for one complete vibration is called?",
+    options: ["Period", "Frequency", "Amplitude", "Wavelength"],
+    answer: "Period"
+  },
+  {
+    question: "The number of vibrations per second is called?",
+    options: ["Frequency", "Period", "Amplitude", "Wavelength"],
+    answer: "Frequency"
+  },
+  {
+    question: "The distance between two consecutive compressions in a sound wave is?",
+    options: ["Wavelength", "Amplitude", "Frequency", "Period"],
+    answer: "Wavelength"
+  },
+  {
+    question: "Which of the following is NOT a property of sound waves?",
+    options: [
+      "They can be polarized",
+      "They can be reflected",
+      "They can be refracted",
+      "They can be diffracted"
+    ],
+    answer: "They can be polarized"
+  },
+  {
+    question: "Which of the following is NOT a use of sound?",
+    options: [
+      "Photosynthesis",
+      "Communication",
+      "Music",
+      "Medical diagnosis"
+    ],
+    answer: "Photosynthesis"
+  },
+  {
+    question: "Which of the following animals can hear ultrasound?",
+    options: ["Bats", "Humans", "Cows", "Sheep"],
+    answer: "Bats"
+  },
+  {
+    question: "Which of the following is NOT a source of noise pollution?",
+    options: [
+      "Falling leaves",
+      "Traffic",
+      "Loudspeakers",
+      "Factories"
+    ],
+    answer: "Falling leaves"
+  },
+  {
+    question: "Which of the following is a method to reduce noise pollution?",
+    options: [
+      "Planting trees",
+      "Using more loudspeakers",
+      "Increasing traffic",
+      "Building more factories"
+    ],
+    answer: "Planting trees"
+  },
+  {
+    question: "Which of the following is NOT a musical instrument?",
+    options: ["Chair", "Drum", "Flute", "Piano"],
+    answer: "Chair"
+  },
+  {
+    question: "Which of the following is NOT a characteristic of musical sound?",
+    options: [
+      "Regular wave pattern",
+      "Pleasant to hear",
+      "Irregular wave pattern",
+      "Definite pitch"
+    ],
+    answer: "Irregular wave pattern"
+  },
+  {
+    question: "Which of the following is a characteristic of noise?",
+    options: [
+      "Irregular wave pattern",
+      "Definite pitch",
+      "Pleasant to hear",
+      "Regular wave pattern"
+    ],
+    answer: "Irregular wave pattern"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting the pitch of sound?",
+    options: [
+      "Frequency",
+      "Length of vibrating object",
+      "Amplitude",
+      "Tension"
+    ],
+    answer: "Amplitude"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting the loudness of sound?",
+    options: [
+      "Amplitude",
+      "Distance from source",
+      "Frequency",
+      "Sensitivity of ear"
+    ],
+    answer: "Frequency"
+  },
+  {
+    question: "Which of the following is NOT a use of sound in animals?",
+    options: [
+      "Navigation",
+      "Communication",
+      "Finding food",
+      "Photosynthesis"
+    ],
+    answer: "Photosynthesis"
+  },
+  {
+    question: "Which of the following is NOT a property of ultrasonic waves?",
+    options: [
+      "Can be heard by humans",
+      "Can travel through solids",
+      "Can be used in medical imaging",
+      "Have high frequency"
+    ],
+    answer: "Can be heard by humans"
+  },
+  {
+    question: "Which of the following is NOT a property of infrasonic waves?",
+    options: [
+      "Frequency below 20 Hz",
+      "Can be heard by elephants",
+      "Can be heard by humans",
+      "Travel long distances"
+    ],
+    answer: "Can be heard by humans"
+  },
+  {
+    question: "Which of the following is NOT a method of sound transmission?",
+    options: [
+      "Conduction",
+      "Convection",
+      "Radiation",
+      "Vibration"
+    ],
+    answer: "Radiation"
+  }
+];
+// ...existing code...
+// ...existing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Power",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subjects - LearnHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg,#0ea5e9,#8b5cf6);
+      color:#fff;
+      padding:20px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    header{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:15px 10%;background:rgba(0,0,0,0.3);border-radius:10px;
+      margin-bottom:30px;position:relative;
+    }
+    .logo{font-size:1.5rem;font-weight:700}
+    nav ul{display:flex;list-style:none;gap:20px}
+    nav a{text-decoration:none;color:#fff;font-weight:600;transition:0.3s}
+    nav a:hover{color:#38bdf8}
+    .hamburger{display:none;font-size:1.8rem;cursor:pointer}
+    @media(max-width:768px){
+      nav ul{display:none;flex-direction:column;position:absolute;top:60px;right:10%;background:rgba(0,0,0,0.8);padding:15px;border-radius:8px;}
+      nav ul.show{display:flex;}
+      .hamburger{display:block;}
+    }
+    h1{text-align:center;margin-bottom:20px}
+    .search-bar{text-align:center;margin-bottom:20px;}
+    .search-bar input{
+      padding:10px;width:60%;max-width:400px;border-radius:8px;border:none;outline:none;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:20px;
+      padding:0 10%;
+      flex:1;
+    }
+    .card{
+      background:rgba(0,0,0,0.5);
+      padding:25px;
+      border-radius:14px;
+      text-align:center;
+      box-shadow:0 6px 15px rgba(0,0,0,0.25);
+      transition:0.3s;
+    }
+    .card:hover{transform:translateY(-6px);background:linear-gradient(135deg,#2563eb,#7c3aed);}
+    .card h3{margin-bottom:10px}
+    .card a{
+      display:inline-block;
+      margin-top:10px;
+      padding:8px 14px;
+      border-radius:8px;
+      text-decoration:none;
+      background:#0ea5e9;
+      color:#fff;
+      font-weight:600;
+      transition:0.3s;
+    }
+    .card a:hover{background:#38bdf8}
+    footer{
+      text-align:center;padding:15px;margin-top:30px;background:rgba(0,0,0,0.4);border-radius:10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">📘 LearnHub</div>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <nav>
+      <ul id="menu">
+        <li><a href="student_home.php">Dashboard</a></li>
+        <li><a href="subjects.html">Subjects</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="logout.php">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <h1>All Subjects</h1>
+  
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search for a subject...">
+  </div>
+
+  <!-- Subjects Grid -->
+  <div class="grid" id="subjectsGrid">
+    <div class="card" data-name="biology">
+      <h3>Biology</h3>
+      <p>Study life, organisms, and ecosystems.</p>
+      <a href="biology.html">Open →</a>
+    </div>
+    <div class="card" data-name="chemistry">
+      <h3>Chemistry</h3>
+      <p>Explore matter, reactions, and elements.</p>
+      <a href="chemistry.html">Open →</a>
+    </div>
+    <div class="card" data-name="physics">
+      <h3>Physics</h3>
+      <p>Learn forces, motion, and energy.</p>
+      <a href="physics.html">Open →</a>
+    </div>
+    <div class="card" data-name="mathematics">
+      <h3>Mathematics</h3>
+      <p>Master algebra, geometry, and calculus.</p>
+      <a href="mathematics.html">Open →</a>
+    </div>
+    <div class="card" data-name="literature">
+      <h3>Literature</h3>
+      <p>Dive into poetry, prose, and drama.</p>
+      <a href="literature.html">Open →</a>
+    </div>
+    <div class="card" data-name="history">
+      <h3>History</h3>
+      <p>Learn about the past and civilizations.</p>
+      <a href="history.html">Open →</a>
+    </div>
+    <div class="card" data-name="government">
+      <h3>Government</h3>
+      <p>Understand politics and leadership.</p>
+      <a href="government.html">Open →</a>
+    </div>
+    <div class="card" data-name="crs">
+      <h3>Christian Religious Studies</h3>
+      <p>Explore faith, scripture, and teachings.</p>
+      <a href="crs.html">Open →</a>
+    </div>
+    <div class="card" data-name="economics">
+      <h3>Economics</h3>
+      <p>Study trade, money, and development.</p>
+      <a href="economics.html">Open →</a>
+    </div>
+    <div class="card" data-name="accounting">
+      <h3>Accounting</h3>
+      <p>Learn bookkeeping, balance sheets, and finance.</p>
+      <a href="accounting.html">Open →</a>
+    </div>
+    <div class="card" data-name="commerce">
+      <h3>Commerce</h3>
+      <p>Understand business and trade systems.</p>
+      <a href="commerce.html">Open →</a>
+    </div>
+    <div class="card" data-name="marketing">
+      <h3>Marketing</h3>
+      <p>Discover advertising and consumer behavior.</p>
+      <a href="marketing.html">Open →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 LearnHub. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // Toggle Hamburger Menu
+    function toggleMenu(){
+      document.getElementById("menu").classList.toggle("show");
+    }
+
+    // Search Filter
+    const searchInput = document.getElementById("search");
+    const cards = document.querySelectorAll(".card");
+    searchInput.addEventListener("keyup", function(){
+      const filter = searchInput.value.toLowerCase();
+      cards.forEach(card=>{
+        const name = card.dataset.name;
+        if(name.includes(filter)){
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

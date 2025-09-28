@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background:linear-gradient(135deg, #0f766e, #0891b2, #38bdf8);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+const quizData = [
+  {
+    question: "What is speed?",
+    options: [
+      "Distance covered per unit time",
+      "Change in direction per unit time",
+      "Displacement per unit time",
+      "Force per unit mass"
+    ],
+    answer: "Distance covered per unit time"
+  },
+  {
+    question: "What is velocity?",
+    options: [
+      "Displacement per unit time in a specified direction",
+      "Distance per unit time",
+      "Change in mass per unit time",
+      "Force per unit area"
+    ],
+    answer: "Displacement per unit time in a specified direction"
+  },
+  {
+    question: "The SI unit of speed is?",
+    options: ["m/s", "kg", "m", "s"],
+    answer: "m/s"
+  },
+  {
+    question: "The SI unit of velocity is?",
+    options: ["m/s", "kg", "m", "s"],
+    answer: "m/s"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Speed", "Velocity", "Displacement", "Acceleration"],
+    answer: "Speed"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Velocity", "Speed", "Distance", "Mass"],
+    answer: "Velocity"
+  },
+  {
+    question: "If a car travels 100 m in 20 s, its speed is?",
+    options: ["5 m/s", "20 m/s", "0.2 m/s", "2 m/s"],
+    answer: "5 m/s"
+  },
+  {
+    question: "If a runner completes a 400 m lap in 50 s, what is his average speed?",
+    options: ["8 m/s", "0.125 m/s", "50 m/s", "400 m/s"],
+    answer: "8 m/s"
+  },
+  {
+    question: "If a car moves 60 km north in 2 hours, its velocity is?",
+    options: ["30 km/h north", "60 km/h north", "120 km/h north", "2 km/h north"],
+    answer: "30 km/h north"
+  },
+  {
+    question: "What is the formula for speed?",
+    options: [
+      "Distance / Time",
+      "Time / Distance",
+      "Distance x Time",
+      "Velocity x Time"
+    ],
+    answer: "Distance / Time"
+  },
+  {
+    question: "What is the formula for velocity?",
+    options: [
+      "Displacement / Time",
+      "Distance / Time",
+      "Time / Displacement",
+      "Speed x Time"
+    ],
+    answer: "Displacement / Time"
+  },
+  {
+    question: "A car moves 100 m east and then 100 m west in 50 s. What is its average speed?",
+    options: ["4 m/s", "2 m/s", "0 m/s", "1 m/s"],
+    answer: "4 m/s"
+  },
+  {
+    question: "A car moves 100 m east and then 100 m west in 50 s. What is its average velocity?",
+    options: ["0 m/s", "2 m/s", "4 m/s", "1 m/s"],
+    answer: "0 m/s"
+  },
+  {
+    question: "Which of the following can be negative?",
+    options: ["Velocity", "Speed", "Distance", "Time"],
+    answer: "Velocity"
+  },
+  {
+    question: "Which of the following is always positive?",
+    options: ["Speed", "Velocity", "Displacement", "Acceleration"],
+    answer: "Speed"
+  },
+  {
+    question: "If a body returns to its starting point, its displacement is?",
+    options: ["Zero", "Maximum", "Minimum", "Equal to distance"],
+    answer: "Zero"
+  },
+  {
+    question: "If a body returns to its starting point, its distance covered is?",
+    options: ["Not zero", "Zero", "Negative", "Infinite"],
+    answer: "Not zero"
+  },
+  {
+    question: "A car travels 60 km in 2 hours. What is its average speed?",
+    options: ["30 km/h", "60 km/h", "120 km/h", "2 km/h"],
+    answer: "30 km/h"
+  },
+  {
+    question: "A car travels 120 km in 3 hours. What is its average speed?",
+    options: ["40 km/h", "60 km/h", "30 km/h", "90 km/h"],
+    answer: "40 km/h"
+  },
+  {
+    question: "If a car moves at a constant speed, its acceleration is?",
+    options: ["Zero", "Maximum", "Minimum", "Increasing"],
+    answer: "Zero"
+  },
+  {
+    question: "Which of the following is NOT a unit of speed?",
+    options: ["m/s", "km/h", "cm/s", "kg/m"],
+    answer: "kg/m"
+  },
+  {
+    question: "Which of the following is NOT a unit of velocity?",
+    options: ["m/s", "km/h", "cm/s", "kg/m"],
+    answer: "kg/m"
+  },
+  {
+    question: "If a car moves 100 m north in 10 s, what is its velocity?",
+    options: ["10 m/s north", "100 m/s north", "1 m/s north", "0.1 m/s north"],
+    answer: "10 m/s north"
+  },
+  {
+    question: "If a car moves 200 m in 20 s, what is its speed?",
+    options: ["10 m/s", "20 m/s", "5 m/s", "0.1 m/s"],
+    answer: "10 m/s"
+  },
+  {
+    question: "The magnitude of velocity is called?",
+    options: ["Speed", "Acceleration", "Distance", "Displacement"],
+    answer: "Speed"
+  },
+  {
+    question: "Which of the following is a correct pair?",
+    options: ["Speed - Scalar", "Velocity - Scalar", "Speed - Vector", "Displacement - Scalar"],
+    answer: "Speed - Scalar"
+  },
+  {
+    question: "Which of the following is a correct pair?",
+    options: ["Velocity - Vector", "Speed - Vector", "Distance - Vector", "Displacement - Scalar"],
+    answer: "Velocity - Vector"
+  },
+  {
+    question: "A car moves at 72 km/h. What is its speed in m/s?",
+    options: ["20 m/s", "72 m/s", "18 m/s", "2 m/s"],
+    answer: "20 m/s"
+  },
+  {
+    question: "A train travels 150 km in 3 hours. What is its average speed?",
+    options: ["50 km/h", "150 km/h", "30 km/h", "60 km/h"],
+    answer: "50 km/h"
+  },
+  {
+    question: "If a car moves 500 m in 50 s, what is its speed?",
+    options: ["10 m/s", "5 m/s", "50 m/s", "100 m/s"],
+    answer: "10 m/s"
+  },
+  {
+    question: "If a runner completes a 400 m lap in 100 s, what is his average speed?",
+    options: ["4 m/s", "0.25 m/s", "40 m/s", "100 m/s"],
+    answer: "4 m/s"
+  },
+  {
+    question: "If a car moves 60 km east and then 80 km west, what is its displacement?",
+    options: ["20 km west", "140 km east", "20 km east", "140 km west"],
+    answer: "20 km west"
+  },
+  {
+    question: "If a car moves 60 km east and then 80 km west, what is the total distance covered?",
+    options: ["140 km", "20 km", "60 km", "80 km"],
+    answer: "140 km"
+  },
+  {
+    question: "Which of the following is NOT a scalar quantity?",
+    options: ["Velocity", "Speed", "Distance", "Time"],
+    answer: "Velocity"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Speed", "Velocity", "Displacement", "Acceleration"],
+    answer: "Speed"
+  },
+  {
+    question: "If a car moves at 90 km/h for 2 hours, what is the distance covered?",
+    options: ["180 km", "90 km", "45 km", "2 km"],
+    answer: "180 km"
+  },
+  {
+    question: "If a car moves at 15 m/s for 4 minutes, what is the distance covered?",
+    options: ["3600 m", "900 m", "60 m", "15 m"],
+    answer: "3600 m"
+  },
+  {
+    question: "If a car moves 100 m north in 20 s, what is its velocity?",
+    options: ["5 m/s north", "20 m/s north", "0.2 m/s north", "2 m/s north"],
+    answer: "5 m/s north"
+  },
+  {
+    question: "If a car moves 150 m in 15 s, what is its speed?",
+    options: ["10 m/s", "15 m/s", "5 m/s", "150 m/s"],
+    answer: "10 m/s"
+  }
+];
+// ...existing code...ing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Speed and velocity",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

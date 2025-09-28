@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SS1 Physics Quiz</title>
+<style>
+body{font-family:'Poppins',sans-serif; background:linear-gradient(135deg,#0f766e,#0891b2,#38bdf8); color:#fff; display:flex; justify-content:center; align-items:center; min-height:100vh; margin:0;}
+.quiz-container{background: rgba(0,0,0,0.7); padding:25px; border-radius:14px; max-width:700px; width:100%; text-align:center;}
+.option-btn{display:block; width:100%; padding:10px; margin:8px 0; background:#0ea5e9; border:none; border-radius:8px; color:#fff; cursor:pointer; transition:0.3s;}
+.option-btn:hover{background:#38bdf8;}
+#next-btn,#submitBtn{display:none; background:#22c55e; padding:10px 18px; border:none; border-radius:8px; color:#fff; cursor:pointer; margin-top:10px;}
+#next-btn:hover,#submitBtn:hover{background:#16a34a;}
+#timer{font-size:1.2rem; font-weight:bold; margin-bottom:15px;}
+</style>
+<script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script type="text/javascript">
+   (function(){ emailjs.init("YOUR_USER_ID"); })(); // Replace with your EmailJS user ID
+</script>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div id="options"></div>
+    <button id="next-btn">Next</button>
+    <button id="submitBtn">Submit Quiz</button>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+// ===== 50 HARD SS1 PHYSICS QUESTIONS =====
+const quizData = [
+{question:"What is speed?", options:["Distance/time","Displacement/time","Force/time","Momentum/time"], answer:"Distance/time"},
+{question:"What is velocity?", options:["Displacement/time in direction","Distance/time","Acceleration/time","Force/mass"], answer:"Displacement/time in direction"},
+{question:"The SI unit of speed is?", options:["m/s","kg","N","J"], answer:"m/s"},
+{question:"The SI unit of velocity is?", options:["m/s","kg","m","s"], answer:"m/s"},
+{question:"Which is a scalar quantity?", options:["Speed","Velocity","Displacement","Acceleration"], answer:"Speed"},
+{question:"Which is a vector quantity?", options:["Velocity","Speed","Distance","Mass"], answer:"Velocity"},
+{question:"Acceleration formula?", options:["Change in velocity/time","Force/mass","Distance/time","Velocity/time"], answer:"Change in velocity/time"},
+{question:"Unit of acceleration?", options:["m/s²","m/s","N","kg"], answer:"m/s²"},
+{question:"Displacement formula?", options:["Final-initial position","Distance/time","Speed x Time","Mass x Acceleration"], answer:"Final-initial position"},
+{question:"Distance formula?", options:["Sum of path length","Displacement/time","Acceleration x Time","Force/Time"], answer:"Sum of path length"},
+{question:"Force formula?", options:["Mass x Acceleration","Weight x Height","Work/Time","Momentum/Time"], answer:"Mass x Acceleration"},
+{question:"Unit of force?", options:["Newton","Joule","Watt","Pascal"], answer:"Newton"},
+{question:"Weight formula?", options:["Mass x Gravity","Mass/Gravity","Force/Area","Momentum/Time"], answer:"Mass x Gravity"},
+{question:"Unit of weight?", options:["Newton","Kg","Joule","Watt"], answer:"Newton"},
+{question:"Momentum formula?", options:["Mass x Velocity","Force x Time","Acceleration x Mass","Distance x Speed"], answer:"Mass x Velocity"},
+{question:"Unit of momentum?", options:["Kg m/s","N","J","Watt"], answer:"Kg m/s"},
+{question:"Work formula?", options:["Force x Distance","Mass x Acceleration","Power/Time","Force/Velocity"], answer:"Force x Distance"},
+{question:"Unit of work?", options:["Joule","Newton","Watt","Kg"], answer:"Joule"},
+{question:"Power formula?", options:["Work/Time","Force x Distance","Mass x Acceleration","Energy x Time"], answer:"Work/Time"},
+{question:"Unit of power?", options:["Watt","Newton","Joule","Kg"], answer:"Watt"},
+{question:"Kinetic energy formula?", options:["1/2 m v²","m g h","F x d","p²/2m"], answer:"1/2 m v²"},
+{question:"Potential energy formula?", options:["m g h","1/2 m v²","F x d","p²/2m"], answer:"m g h"},
+{question:"Unit of energy?", options:["Joule","Newton","Watt","Kg"], answer:"Joule"},
+{question:"Elasticity formula?", options:["Stress/Strain","Force x Distance","Mass x Acceleration","Velocity/Time"], answer:"Stress/Strain"},
+{question:"Pressure formula?", options:["Force/Area","Mass x Acceleration","Velocity x Time","Work/Distance"], answer:"Force/Area"},
+{question:"Unit of pressure?", options:["Pascal","Newton","Joule","Watt"], answer:"Pascal"},
+{question:"Hooke's law formula?", options:["F=kx","F=ma","W=Fd","P=mv"], answer:"F=kx"},
+{question:"Mechanical advantage formula?", options:["Load/Effort","Effort/Load","Work/Time","Force x Distance"], answer:"Load/Effort"},
+{question:"Efficiency formula?", options:["(MA/VR) x 100","F/m","P x V","W/Time"], answer:"(MA/VR) x 100"},
+{question:"Simple machine example?", options:["Lever","Force meter","Pulley board","Voltmeter"], answer:"Lever"},
+{question:"Law of reflection?", options:["Angle of incidence=angle of reflection","focal length=object distance","sin i=sin r","v=fλ"], answer:"Angle of incidence=angle of reflection"},
+{question:"Unit of frequency?", options:["Hertz","Newton","Joule","Watt"], answer:"Hertz"},
+{question:"Speed of sound in air?", options:["343 m/s","300 m/s","150 m/s","500 m/s"], answer:"343 m/s"},
+{question:"Lens formula?", options:["1/f=1/v-1/u","f=v-u","v=f/u","u=f-v"], answer:"1/f=1/v-1/u"},
+{question:"Power of lens?", options:["1/f","f²","v/u","u/v"], answer:"1/f"},
+{question:"Refractive index formula?", options:["sin i/sin r","cos i/cos r","tan i/tan r","n=f/v"], answer:"sin i/sin r"},
+{question:"Ohm's law formula?", options:["V=IR","P=VI","R=V/I²","I=V²/R"], answer:"V=IR"},
+{question:"Unit of current?", options:["Ampere","Volt","Ohm","Watt"], answer:"Ampere"},
+{question:"Unit of voltage?", options:["Volt","Ampere","Ohm","Joule"], answer:"Volt"},
+{question:"Unit of resistance?", options:["Ohm","Volt","Ampere","Watt"], answer:"Ohm"},
+{question:"Series resistance formula?", options:["R1+R2+...","1/R1+1/R2","R1*R2","V/I"], answer:"R1+R2+..."},
+{question:"Parallel resistance formula?", options:["1/R1+1/R2","R1+R2","R1*R2","V/I"], answer:"1/R1+1/R2"},
+{question:"Magnetism unit?", options:["Tesla","Ampere","Newton","Joule"], answer:"Tesla"},
+{question:"Current in series circuit?", options:["Same","Different","Halved","Doubled"], answer:"Same"},
+{question:"Current in parallel circuit?", options:["Divided","Same","Zero","Infinite"], answer:"Divided"},
+{question:"Voltage in series circuit?", options:["Divided","Same","Zero","Infinite"], answer:"Divided"},
+{question:"Voltage in parallel circuit?", options:["Same","Different","Zero","Infinite"], answer:"Same"},
+{question:"Energy formula?", options:["E=mc²","F=ma","W=Fd","P=VI"], answer:"E=mc²"},
+{question:"Density formula?", options:["Mass/Volume","Volume/Mass","Force/Area","Weight/Volume"], answer:"Mass/Volume"},
+{question:"Unit of density?", options:["Kg/m³","Kg","m/s²","Newton"], answer:"Kg/m³"},
+{question:"Heat formula?", options:["Q=mcΔT","P=VI","W=Fd","F=ma"], answer:"Q=mcΔT"},
+{question:"Specific heat formula?", options:["Q=mcΔT","P=VI","W=Fd","F=ma"], answer:"Q=mcΔT"},
+{question:"Temperature unit?", options:["Kelvin","Celsius","Joule","Watt"], answer:"Kelvin"},
+{question:"Thermal expansion formula?", options:["ΔL=αLΔT","Q=mcΔT","W=Fd","F=ma"], answer:"ΔL=αLΔT"},
+{question:"Unit of thermal expansion?", options:["m/m°C","m","m/s","J"], answer:"m/m°C"}
+];
+
+// ===== VARIABLES =====
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes
+
+const startBtn = document.getElementById("startBtn");
+const nameInput = document.getElementById("studentName");
+const quizSection = document.getElementById("quizSection");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const submitBtn = document.getElementById("submitBtn");
+const resultEl = document.getElementById("result");
+
+// ===== START QUIZ =====
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if(student===""){ alert("Please enter your name."); return; }
+  nameInput.style.display="none";
+  startBtn.style.display="none";
+  quizSection.style.display="block";
+  loadQuestion();
+  startTimer();
+});
+
+// ===== TIMER =====
+function startTimer(){
+  timer = setInterval(()=>{
+    timeLeft--;
+    let minutes = Math.floor(timeLeft/60);
+    let seconds = timeLeft%60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds<10?'0':''}${seconds}`;
+    if(timeLeft<=0){
+      clearInterval(timer);
+      endQuiz();
+    }
+  },1000);
+}
+
+// ===== LOAD QUESTION =====
+function loadQuestion(){
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML='';
+  q.options.forEach(opt=>{
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.className='option-btn';
+    btn.onclick = ()=>selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+// ===== SELECT ANSWER =====
+function selectAnswer(selected){
+  const correct = quizData[currentQuestion].answer;
+  if(selected===correct) score++;
+  nextBtn.style.display='inline-block';
+  Array.from(optionsEl.children).forEach(btn=>{
+    btn.disabled=true;
+    if(btn.textContent===correct) btn.style.background="#22c55e";
+    else if(btn.textContent===selected) btn.style.background="#ef4444";
+  });
+}
+
+// ===== NEXT BUTTON =====
+nextBtn.addEventListener('click', ()=>{
+  currentQuestion++;
+  if(currentQuestion<quizData.length){
+    loadQuestion();
+    nextBtn.style.display='none';
+  } else {
+    endQuiz();
+  }
+});
+
+// ===== END QUIZ =====
+function endQuiz(){
+  clearInterval(timer);
+  questionEl.textContent="Quiz Completed!";
+  optionsEl.innerHTML='';
+  nextBtn.style.display='none';
+  submitBtn.style.display='inline-block';
+  resultEl.textContent=`${student}, your Score: ${score} / ${quizData.length}`;
+}
+
+// ===== SUBMIT BUTTON =====
+submitBtn.addEventListener('click', ()=>{
+  let templateParams = {
+    student_name: student,
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  };
+
+  emailjs.send('centemalon777@gmail.com', templateParams)
+  .then(function(response){
+    alert("Score sent successfully to the teacher!");
+    submitBtn.style.display='none';
+  }, function(error){
+    alert("Failed to send score. Please try again.");
+  });
+});
+</script>
+
+</body>
+</html>

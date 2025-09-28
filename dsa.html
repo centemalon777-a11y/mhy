@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Inbox</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0ea5e9, #1e293b);
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { font-size: 2rem; color: #facc15; }
+    header p { color: #cbd5e1; }
+
+    .inbox-container {
+      max-width: 700px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .message-card {
+      background: rgba(0,0,0,0.5);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .message-event {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #38bdf8;
+    }
+    .message-text { margin: 8px 0; font-size: 1rem; line-height: 1.5; }
+    .message-meta {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      display: flex;
+      justify-content: space-between;
+    }
+    .no-messages {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #cbd5e1;
+      margin-top: 30px;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      padding: 10px 20px;
+      background: #0ea5e9;
+      color: white;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.3s;
+      max-width: 200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .back-link:hover { background: #38bdf8; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📩 My Messages</h1>
+  <p id="welcome-msg"></p>
+</header>
+
+<section class="inbox-container" id="inbox"></section>
+
+<a href="er.html" class="back-link">← Back to Dashboard</a>
+
+<script>
+  // Get logged in student
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const inbox = document.getElementById("inbox");
+  const welcome = document.getElementById("welcome-msg");
+
+  if (loggedInUser) {
+    welcome.textContent = `Welcome, ${loggedInUser.name} (Class: ${loggedInUser.className})`;
+    loadMessages(loggedInUser.email);
+  } else {
+    welcome.textContent = "Not logged in.";
+  }
+
+  function loadMessages(email) {
+    const key = "messages_" + email;
+    const messages = JSON.parse(localStorage.getItem(key)) || [];
+
+    if (messages.length === 0) {
+      inbox.innerHTML = `<p class="no-messages">No messages yet.</p>`;
+      return;
+    }
+
+    // Render messages
+    messages.forEach(m => {
+      const div = document.createElement("div");
+      div.className = "message-card";
+      div.innerHTML = `
+        <div class="message-event">📌 ${m.event}</div>
+        <div class="message-text">${m.text}</div>
+        <div class="message-meta">
+          <span>From: ${m.from}</span>
+          <span>${m.time}</span>
+        </div>
+      `;
+      inbox.appendChild(div);
+    });
+  }
+</script>
+
+</body>
+</html>

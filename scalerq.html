@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb, #3b82f6);
+      color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+const quizData = [
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Speed", "Velocity", "Displacement", "Acceleration"],
+    answer: "Speed"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Force", "Distance", "Mass", "Energy"],
+    answer: "Force"
+  },
+  {
+    question: "Which of the following is NOT a scalar quantity?",
+    options: ["Momentum", "Temperature", "Distance", "Speed"],
+    answer: "Momentum"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Work", "Displacement", "Velocity", "Acceleration"],
+    answer: "Work"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Energy", "Displacement", "Force", "Acceleration"],
+    answer: "Energy"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Acceleration", "Distance", "Speed", "Work"],
+    answer: "Acceleration"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Mass", "Weight", "Momentum", "Force"],
+    answer: "Mass"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Weight", "Temperature", "Time", "Power"],
+    answer: "Weight"
+  },
+  {
+    question: "Which of the following is NOT a scalar quantity?",
+    options: ["Impulse", "Power", "Time", "Temperature"],
+    answer: "Impulse"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Energy", "Acceleration", "Force", "Displacement"],
+    answer: "Energy"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Work", "Velocity", "Displacement", "Acceleration"],
+    answer: "Work"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Displacement", "Distance", "Energy", "Power"],
+    answer: "Displacement"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Distance", "Velocity", "Force", "Momentum"],
+    answer: "Distance"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Momentum", "Energy", "Power", "Temperature"],
+    answer: "Momentum"
+  },
+  {
+    question: "Which of the following is NOT a scalar quantity?",
+    options: ["Electric field", "Mass", "Time", "Temperature"],
+    answer: "Electric field"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Speed", "Acceleration", "Force", "Displacement"],
+    answer: "Speed"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Power", "Velocity", "Displacement", "Acceleration"],
+    answer: "Power"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Electric field", "Energy", "Work", "Mass"],
+    answer: "Electric field"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Temperature", "Force", "Weight", "Acceleration"],
+    answer: "Temperature"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Magnetic field", "Energy", "Work", "Power"],
+    answer: "Magnetic field"
+  },
+  {
+    question: "Which of the following is NOT a scalar quantity?",
+    options: ["Angular velocity", "Distance", "Speed", "Time"],
+    answer: "Angular velocity"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Energy", "Velocity", "Acceleration", "Force"],
+    answer: "Energy"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Density", "Displacement", "Velocity", "Acceleration"],
+    answer: "Density"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Angular velocity", "Mass", "Time", "Temperature"],
+    answer: "Angular velocity"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Specific heat capacity", "Force", "Weight", "Momentum"],
+    answer: "Specific heat capacity"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Torque", "Energy", "Work", "Power"],
+    answer: "Torque"
+  },
+  {
+    question: "Which of the following is NOT a scalar quantity?",
+    options: ["Torque", "Energy", "Work", "Power"],
+    answer: "Torque"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Pressure", "Force", "Acceleration", "Velocity"],
+    answer: "Pressure"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Pressure", "Displacement", "Velocity", "Acceleration"],
+    answer: "Pressure"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Current", "Energy", "Work", "Power"],
+    answer: "Current"
+  },
+  {
+    question: "Which of the following is NOT a scalar quantity?",
+    options: ["Current", "Energy", "Work", "Power"],
+    answer: "Current"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Energy", "Displacement", "Velocity", "Acceleration"],
+    answer: "Energy"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Volume", "Force", "Weight", "Acceleration"],
+    answer: "Volume"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Displacement", "Distance", "Speed", "Temperature"],
+    answer: "Displacement"
+  },
+  {
+    question: "Which of the following is NOT a scalar quantity?",
+    options: ["Displacement", "Distance", "Speed", "Time"],
+    answer: "Displacement"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Speed", "Velocity", "Acceleration", "Force"],
+    answer: "Speed"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Time", "Force", "Weight", "Acceleration"],
+    answer: "Time"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Velocity", "Distance", "Speed", "Temperature"],
+    answer: "Velocity"
+  },
+  {
+    question: "Which of the following is NOT a scalar quantity?",
+    options: ["Velocity", "Distance", "Speed", "Time"],
+    answer: "Velocity"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Energy", "Velocity", "Acceleration", "Force"],
+    answer: "Energy"
+  }
+];
+// ...existing code...
+
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...ing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Scalars and Vectors",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

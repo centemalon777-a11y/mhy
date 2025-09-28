@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Event Registrations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0ea5e9, #1e293b);
+      color:#fff;
+      min-height:100vh;
+      padding:20px;
+    }
+    header { text-align:center; margin-bottom:40px; }
+    header h1 { font-size:2rem; color:#38bdf8; }
+
+    .events-container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+    .event-card {
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .event-date { font-size: 1rem; font-weight: 600; color: #0ea5e9; margin-bottom: 5px; }
+    .event-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+    .event-desc { font-size: 0.95rem; color: #e2e8f0; margin-bottom: 15px; }
+
+    .student-list { margin-left: 15px; list-style: none; padding-left:0; }
+    .student-list li {
+      margin-bottom: 8px;
+      color: #facc15;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .delete-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .delete-btn:hover { background: #dc2626; }
+
+    .message-box {
+      margin-top: 15px;
+    }
+    .message-box textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+    .send-btn {
+      background: #0ea5e9;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .send-btn:hover { background: #38bdf8; }
+
+    .no-students { color: #e2e8f0; font-style: italic; }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 10px 20px;
+      background: #0ea5e9;
+      color: white;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .back-link:hover { background: #38bdf8; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>👨‍🏫 Admin - Event Registrations</h1>
+  <p>Manage student registrations and send messages</p>
+</header>
+
+<section class="events-container" id="all-events-list"></section>
+
+<div style="text-align:center;">
+  <a href="events.html" class="back-link">← Back to Events</a>
+</div>
+
+<script>
+  // Events
+  const allEvents = [
+    { id: 1, date: "2025-10-05", title: "Science Fair", desc: "An exhibition showcasing student science projects." },
+    { id: 2, date: "2025-10-12", title: "Math Competition", desc: "Inter-school quiz competition on mathematics." },
+    { id: 3, date: "2025-10-20", title: "Cultural Day", desc: "A celebration of art, music, and cultural heritage." },
+    { id: 4, date: "2025-11-01", title: "First Term Exams", desc: "Examinations for all classes will begin." }
+  ];
+
+  // Student registrations
+  let registeredEvents = JSON.parse(localStorage.getItem("registeredEvents")) || [];
+
+  // Messages store
+  let eventMessages = JSON.parse(localStorage.getItem("eventMessages")) || {};
+
+  const eventsList = document.getElementById("all-events-list");
+
+  function renderAllRegistrations() {
+    eventsList.innerHTML = "";
+    allEvents.forEach(event => {
+      const students = registeredEvents.filter(r => r.id === event.id);
+
+      const div = document.createElement("div");
+      div.className = "event-card";
+      div.innerHTML = `
+        <div class="event-date">${new Date(event.date).toDateString()}</div>
+        <div class="event-title">${event.title}</div>
+        <div class="event-desc">${event.desc}</div>
+        <h4>👥 Registered Students:</h4>
+      `;
+
+      if (students.length > 0) {
+        const ul = document.createElement("ul");
+        ul.className = "student-list";
+        students.forEach((s, index) => {
+          const li = document.createElement("li");
+          li.innerHTML = `${s.name} (Class: ${s.className}) 
+            <button class="delete-btn" onclick="deleteStudent(${event.id}, '${s.name}', '${s.className}')">Remove</button>`;
+          ul.appendChild(li);
+        });
+        div.appendChild(ul);
+      } else {
+        const p = document.createElement("p");
+        p.className = "no-students";
+        p.textContent = "No students registered yet.";
+        div.appendChild(p);
+      }
+
+      // Message box for this event
+      const msgBox = document.createElement("div");
+      msgBox.className = "message-box";
+      msgBox.innerHTML = `
+        <textarea id="msg-${event.id}" rows="3" placeholder="Write a message to all registered students..."></textarea>
+        <button class="send-btn" onclick="sendMessage(${event.id})">Send Message</button>
+      `;
+      div.appendChild(msgBox);
+
+      eventsList.appendChild(div);
+    });
+  }
+
+  // Delete student
+  function deleteStudent(eventId, studentName, studentClass) {
+    registeredEvents = registeredEvents.filter(
+      r => !(r.id === eventId && r.name === studentName && r.className === studentClass)
+    );
+    localStorage.setItem("registeredEvents", JSON.stringify(registeredEvents));
+    renderAllRegistrations();
+    alert(`Removed ${studentName} from event.`);
+  }
+
+  // Send message
+  function sendMessage(eventId) {
+    const textarea = document.getElementById(`msg-${eventId}`);
+    const message = textarea.value.trim();
+    if (!message) {
+      alert("Message cannot be empty.");
+      return;
+    }
+
+    if (!eventMessages[eventId]) {
+      eventMessages[eventId] = [];
+    }
+    eventMessages[eventId].push(message);
+
+    localStorage.setItem("eventMessages", JSON.stringify(eventMessages));
+    textarea.value = "";
+    alert("Message sent to all registered students!");
+  }
+
+  renderAllRegistrations();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard - LearnHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family:'Poppins',sans-serif;
+  background: linear-gradient(135deg,#0ea5e9,#1e293b);
+  color:#fff;
+  margin:0;
+  padding:0;
+}
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 20px;
+  background:rgba(0,0,0,0.4);
+}
+header h1 {font-size:1.8rem;color:#38bdf8;}
+header button {
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  background:#22c55e;
+  color:#fff;
+  cursor:pointer;
+}
+nav {
+  display:flex;
+  justify-content:center;
+  background:rgba(0,0,0,0.3);
+}
+nav button {
+  background:transparent;
+  border:none;
+  color:#fff;
+  padding:12px 20px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+}
+nav button.active, nav button:hover {background:rgba(0,0,0,0.5);border-radius:8px;}
+.container {max-width:1100px;margin:20px auto;padding:0 15px;}
+.section {display:none;}
+.section.active {display:block;}
+.card {background:rgba(0,0,0,0.25);padding:20px;border-radius:12px;margin-bottom:20px;}
+.messages, .forum-list, .leaderboard-list, .event-list {max-height:400px;overflow:auto;margin-top:15px;border-radius:10px;background:rgba(0,0,0,0.15);padding:15px;}
+.msg {padding:10px 15px;border-radius:10px;margin-bottom:12px;max-width:70%;clear:both;}
+.msg.admin{background:#0ea5e9; float:left;}
+.msg.student{background:#22c55e; float:right;}
+.msg small{display:block;font-size:0.75rem;margin-top:4px;color:#e2e8f0;}
+.input-area{display:flex;gap:10px;margin-top:10px;}
+.input-area input{flex:1;padding:10px;border-radius:8px;border:none;}
+.input-area button{padding:10px 15px;border:none;border-radius:8px;background:#0ea5e9;color:#fff;cursor:pointer;}
+.input-area button:hover{background:#38bdf8;}
+ul {list-style:none;padding:0;}
+li {padding:8px;margin-bottom:8px;background:rgba(255,255,255,0.1);border-radius:8px;}
+li:hover {background:rgba(255,255,255,0.2);}
+.register-btn {padding:8px 12px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;cursor:pointer;}
+.register-btn.registered {background:#22c55e;cursor:default;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Student Dashboard</h1>
+  <button id="logoutBtn">Logout</button>
+</header>
+
+<nav>
+  <button class="nav-btn active" data-section="messagesSection">Messages</button>
+  <button class="nav-btn" data-section="eventsSection">Events</button>
+  <button class="nav-btn" data-section="leaderboardSection">Leaderboard</button>
+  <button class="nav-btn" data-section="forumSection">Forum</button>
+</nav>
+
+<div class="container">
+  <!-- Messages -->
+  <div class="section active" id="messagesSection">
+    <div class="card">
+      <h2>Messages from Admin</h2>
+      <div class="messages" id="chatMessages"></div>
+    </div>
+  </div>
+
+  <!-- Events -->
+  <div class="section" id="eventsSection">
+    <div class="card">
+      <h2>Upcoming Tests & Registration</h2>
+      <div class="event-list" id="eventList"></div>
+    </div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="section" id="leaderboardSection">
+    <div class="card">
+      <h2>Leaderboard</h2>
+      <div class="leaderboard-list" id="leaderboardList"></div>
+    </div>
+  </div>
+
+  <!-- Forum -->
+  <div class="section" id="forumSection">
+    <div class="card">
+      <h2>Discussion Forum</h2>
+      <div class="forum-list" id="forumList"></div>
+      <div class="input-area">
+        <input type="text" id="postInput" placeholder="Write a question...">
+        <button id="postBtn">Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== Navigation =====
+const navButtons = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.section');
+navButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    navButtons.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    sections.forEach(sec=>sec.classList.remove('active'));
+    document.getElementById(btn.dataset.section).classList.add('active');
+  });
+});
+
+// ===== Logout =====
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  localStorage.removeItem('currentUser');
+  window.location.href='login.html';
+});
+
+// ===== Current User =====
+const currentUser = localStorage.getItem('currentUser');
+const displayName = JSON.parse(localStorage.getItem('user_' + currentUser))?.name || currentUser;
+
+// ===== Messages =====
+const chatMessages = document.getElementById('chatMessages');
+function renderMessages(){
+  const messages = JSON.parse(localStorage.getItem('messages_' + currentUser) || '[]');
+  chatMessages.innerHTML = '';
+  messages.forEach(m=>{
+    const div = document.createElement('div');
+    div.classList.add('msg', m.from==="Admin"?"admin":"student");
+    div.innerHTML=`<p>${m.text}</p><small>${m.from} • ${new Date(m.ts).toLocaleString()}</small>`;
+    chatMessages.appendChild(div);
+  });
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+renderMessages();
+
+// ===== Events =====
+const events = JSON.parse(localStorage.getItem('events')) || [
+  {id:1,title:"Math Test",date:"2025-09-30",registered:[]},
+  {id:2,title:"Science Test",date:"2025-10-05",registered:[]}
+];
+const eventListEl = document.getElementById('eventList');
+function renderEvents(){
+  eventListEl.innerHTML='';
+  events.forEach(ev=>{
+    const div = document.createElement('div');
+    div.style.marginBottom='10px';
+    const registered = ev.registered.includes(displayName);
+    div.innerHTML=`<strong>${ev.title}</strong> - ${new Date(ev.date).toDateString()} <br>
+      <button class="register-btn ${registered ? "registered" : ""}" ${registered?'disabled':''}>
+        ${registered ? "Registered" : "Register"}
+      </button>`;
+    const btn = div.querySelector('button');
+    btn.addEventListener('click', ()=>{
+      if(!ev.registered.includes(displayName)){
+        ev.registered.push(displayName);
+        localStorage.setItem('events', JSON.stringify(events));
+        renderEvents();
+      }
+    });
+    eventListEl.appendChild(div);
+  });
+}
+renderEvents();
+
+// ===== Leaderboard =====
+const leaderboardListEl = document.getElementById('leaderboardList');
+function renderLeaderboard(){
+  const leaderboard = JSON.parse(localStorage.getItem('leaderboard')||'{}');
+  if(!leaderboard[currentUser]) leaderboard[currentUser] = {name: displayName, score:0};
+  leaderboardListEl.innerHTML='';
+  Object.values(leaderboard).sort((a,b)=>b.score-a.score).forEach(u=>{
+    const div = document.createElement('div');
+    div.style.padding='8px';
+    div.style.borderBottom='1px solid rgba(255,255,255,0.1)';
+    div.textContent = `${u.name} - ${u.score}`;
+    leaderboardListEl.appendChild(div);
+  });
+}
+renderLeaderboard();
+
+// ===== Forum =====
+const forumListEl = document.getElementById('forumList');
+const postInput = document.getElementById('postInput');
+const postBtn = document.getElementById('postBtn');
+function renderForum(){
+  const posts = JSON.parse(localStorage.getItem('forum_posts')||'[]');
+  forumListEl.innerHTML='';
+  posts.slice().reverse().forEach(p=>{
+    const div = document.createElement('div');
+    div.style.padding='8px';
+    div.style.borderBottom='1px solid rgba(255,255,255,0.1)';
+    div.innerHTML=`<strong>${p.author}</strong>: ${p.text} <small>${new Date(p.ts).toLocaleString()}</small>`;
+    forumListEl.appendChild(div);
+  });
+}
+renderForum();
+postBtn.addEventListener('click', ()=>{
+  const text = postInput.value.trim();
+  if(!text) return;
+  const posts = JSON.parse(localStorage.getItem('forum_posts')||'[]');
+  posts.push({author: displayName, text, ts: Date.now()});
+  localStorage.setItem('forum_posts', JSON.stringify(posts));
+  postInput.value='';
+  renderForum();
+});
+</script>
+
+</body>
+</html>

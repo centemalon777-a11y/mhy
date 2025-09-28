@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motivational Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #2563eb, #3f88aa);
+      color: #fff;
+    }
+    .chat-container {
+      width: 350px;
+      height: 500px;
+      background: #fff;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .chat-header {
+      background: #3f88aa;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .chat-box {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #f9fafb;
+      color: #000;
+    }
+    .chat-message {
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 75%;
+    }
+    .user {
+      background: #2563eb;
+      color: #fff;
+      margin-left: auto;
+    }
+    .bot {
+      background: #e5e7eb;
+      color: #000;
+      margin-right: auto;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+    .chat-input button {
+      padding: 10px 15px;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .chat-input button:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">Motivational Bot 🤖</div>
+    <div class="chat-box" id="chat-box"></div>
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="Type your message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+
+    const motivationalReplies = [
+      "Keep pushing! Every expert was once a beginner 📚✨",
+      "Believe in yourself, you are capable of amazing things 💪",
+      "Stay consistent, small steps lead to big success 🚀",
+      "Don’t be afraid of mistakes — they are proof you’re trying 📝",
+      "Hard work beats talent when talent doesn’t work hard 🔥",
+      "You’ve got this! Stay focused and keep moving forward 🌟",
+      "The best way to predict your future is to create it 🎯",
+      "Every day is a chance to learn something new 📖"
+    ];
+
+    function addMessage(message, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("chat-message", sender);
+      msg.textContent = message;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendMessage() {
+      const userInput = document.getElementById("user-input");
+      const message = userInput.value.trim();
+      if (message === "") return;
+
+      // Show user message
+      addMessage(message, "user");
+      userInput.value = "";
+
+      // Bot reply
+      setTimeout(() => {
+        const randomReply = motivationalReplies[Math.floor(Math.random() * motivationalReplies.length)];
+        addMessage(randomReply, "bot");
+      }, 800);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.6);
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    h1 { margin-bottom: 15px; }
+    .question { margin: 20px 0; font-size: 1.2rem; }
+    .answers button {
+      display: block;
+      margin: 8px auto;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .answers button:hover {
+      background: #38bdf8;
+    }
+    #timer {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Physics Quiz ⚡</h1>
+    <div id="timer">Time Left: 3hrs</div>
+    <div id="quiz"></div>
+    <button id="nextBtn" style="display:none;">Next Question →</button>
+    <div id="result"></div>
+  </div>
+<a href="portal.html">Go to Student Portal</a>
+  <script>
+    const quizData = [
+      {
+        question: "What is the SI unit of force?",
+        answers: ["Newton", "Joule", "Watt", "Pascal"],
+        correct: "Newton"
+      },
+      {
+        question: "Which property of sound determines its pitch?",
+        answers: ["Amplitude", "Frequency", "Speed", "Wavelength"],
+        correct: "Frequency"
+      },
+      {
+        question: "What device is used to measure electric current?",
+        answers: ["Voltmeter", "Ammeter", "Barometer", "Thermometer"],
+        correct: "Ammeter"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let timeLeft = 60;
+    let timer;
+
+    const quiz = document.getElementById("quiz");
+    const timerEl = document.getElementById("timer");
+    const nextBtn = document.getElementById("nextBtn");
+    const result = document.getElementById("result");
+
+    function loadQuestion() {
+      if (currentQuestion < quizData.length) {
+        const q = quizData[currentQuestion];
+        quiz.innerHTML = `
+          <div class="question">${q.question}</div>
+          <div class="answers">
+            ${q.answers.map(a => `<button onclick="checkAnswer('${a}')">${a}</button>`).join("")}
+          </div>
+        `;
+      } else {
+        endQuiz();
+      }
+    }
+
+    function checkAnswer(answer) {
+      if (answer === quizData[currentQuestion].correct) {
+        score++;
+      }
+      nextBtn.style.display = "block";
+    }
+
+    nextBtn.addEventListener("click", () => {
+      currentQuestion++;
+      nextBtn.style.display = "none";
+      loadQuestion();
+    });
+
+    function startTimer() {
+      timer = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = `Time Left: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          endQuiz();
+        }
+      }, 1000);
+    }
+
+    function endQuiz() {
+      clearInterval(timer);
+      quiz.innerHTML = "";
+      nextBtn.style.display = "none";
+      result.innerHTML = `✅ You scored ${score} out of ${quizData.length}`;
+      // Save score in localStorage
+      let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+      scores.push({ topic: "Physics", score: score, total: quizData.length, date: new Date().toLocaleString() });
+      localStorage.setItem("quizScores", JSON.stringify(scores));
+    }
+
+    // Start quiz
+    loadQuestion();
+    startTimer();
+  </script>
+</body>
+</html>

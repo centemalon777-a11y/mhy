@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upcoming Events</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .event {
+      background: #fff;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .event button {
+      padding: 8px 15px;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+    .event button:hover {
+      background: #0284c7;
+    }
+    .form-container {
+      margin-top: 15px;
+      display: none;
+    }
+    .form-container input {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .form-container button {
+      background: #22c55e;
+    }
+    .registered {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📅 Upcoming Events</h1>
+
+  <div class="event">
+    <h3>Science Fair</h3>
+    <button onclick="registerEvent('Science Fair')">Register</button>
+  </div>
+  <div class="event">
+    <h3>Maths Competition</h3>
+    <button onclick="registerEvent('Maths Competition')">Register</button>
+  </div>
+  <div class="event">
+    <h3>Sports Day</h3>
+    <button onclick="registerEvent('Sports Day')">Register</button>
+  </div>
+
+  <!-- Registration Form -->
+  <div class="form-container" id="formContainer">
+    <h3>Fill Registration Details</h3>
+    <input type="text" id="studentName" placeholder="Enter your name">
+    <input type="text" id="studentClass" placeholder="Enter your class">
+    <button onclick="submitRegistration()">Submit</button>
+  </div>
+
+  <div class="registered">
+    <h3>Your Registered Events</h3>
+    <ul id="registeredList"></ul>
+  </div>
+
+  <script>
+    let selectedEvent = "";
+
+    // ✅ Get current logged in student
+    const currentUser = localStorage.getItem("currentUser") || "guest";
+
+    // ✅ Load saved events for this student
+    let userEvents = JSON.parse(localStorage.getItem("events_" + currentUser)) || [];
+
+    function registerEvent(eventName) {
+      selectedEvent = eventName;
+      document.getElementById("formContainer").style.display = "block";
+    }
+
+    function submitRegistration() {
+      const name = document.getElementById("studentName").value.trim();
+      const studentClass = document.getElementById("studentClass").value.trim();
+
+      if(name === "" || studentClass === "") {
+        alert("Please fill in all fields!");
+        return;
+      }
+
+      // Save event for this student
+      userEvents.push({ event: selectedEvent, name, studentClass });
+      localStorage.setItem("events_" + currentUser, JSON.stringify(userEvents));
+
+      document.getElementById("formContainer").style.display = "none";
+      document.getElementById("studentName").value = "";
+      document.getElementById("studentClass").value = "";
+
+      renderEvents();
+    }
+
+    function renderEvents() {
+      const list = document.getElementById("registeredList");
+      list.innerHTML = "";
+      userEvents.forEach(reg => {
+        const li = document.createElement("li");
+        li.textContent = `${reg.event} - ${reg.name} (${reg.studentClass})`;
+        list.appendChild(li);
+      });
+    }
+
+    // Render on page load
+    renderEvents();
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Portal with Badges</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0ea5e9, #1e293b);
+      color: #fff;
+      padding: 20px;
+    }
+    h1 { text-align: center; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: rgba(0,0,0,0.6);
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      text-align: center;
+    }
+    th {
+      background: #0ea5e9;
+    }
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.1);
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #fff;
+    }
+    .beginner { background: #f97316; }      /* Orange */
+    .intermediate { background: #0ea5e9; }  /* Blue */
+    .expert { background: #22c55e; }        /* Green */
+    .master { background: #eab308; }        /* Gold */
+  </style>
+</head>
+<body>
+  <h1>📊 Student Quiz Records with Badges</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Topic</th>
+        <th>Score</th>
+        <th>Total</th>
+        <th>Date</th>
+        <th>Badge</th>
+      </tr>
+    </thead>
+    <tbody id="scoreTable"></tbody>
+  </table>
+
+<script>
+const tableBody = document.getElementById("scoreTable");
+const scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+
+// Badge rules
+function getBadge(score, total) {
+  let percentage = (score / total) * 100;
+  if (percentage < 40) {
+    return { name: "Beginner", class: "beginner" };
+  } else if (percentage < 70) {
+    return { name: "Intermediate", class: "intermediate" };
+  } else if (percentage < 90) {
+    return { name: "Expert", class: "expert" };
+  } else {
+    return { name: "Master", class: "master" };
+  }
+}
+
+scores.forEach(s => {
+  const badge = getBadge(s.score, s.total);
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${s.name}</td>
+    <td>${s.topic}</td>
+    <td>${s.score}</td>
+    <td>${s.total}</td>
+    <td>${s.date}</td>
+    <td><span class="badge ${badge.class}">${badge.name}</span></td>
+  `;
+  tableBody.appendChild(row);
+});
+</script>
+</body>
+</html>

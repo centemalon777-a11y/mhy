@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3a8a, #9333ea, #0ea5e9);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      color: #fff;
+      padding: 30px 10px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* glowing background circles */
+    body::before, body::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.07);
+      filter: blur(100px);
+      z-index: 0;
+    }
+    body::before {
+      width: 350px; height: 350px;
+      top: -100px; left: -120px;
+    }
+    body::after {
+      width: 400px; height: 400px;
+      bottom: -120px; right: -100px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .table-container {
+      width: 90%;
+      max-width: 1000px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      overflow-x: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      color: #fff;
+    }
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      text-align: center;
+    }
+    th {
+      background: rgba(14,165,233,0.9);
+      color: #fff;
+      font-weight: 600;
+    }
+    tr:hover {
+      background: rgba(255,255,255,0.08);
+      transition: 0.3s;
+    }
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Student Quiz Records</h1>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Topic</th>
+          <th>Score</th>
+          <th>Total</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="scoreTable"></tbody>
+    </table>
+  </div>
+
+<script>
+const tableBody = document.getElementById("scoreTable");
+const scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+
+scores.forEach(s => {
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${s.name}</td>
+    <td>${s.topic}</td>
+    <td>${s.score}</td>
+    <td>${s.total}</td>
+    <td>${s.date}</td>
+  `;
+  tableBody.appendChild(row);
+});
+</script>
+</body>
+</html>
+

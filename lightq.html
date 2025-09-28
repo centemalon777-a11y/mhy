@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb, #3b82f6);
+      color:white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+
+// ...existing code...
+const quizData = [
+  {
+    question: "What is light?",
+    options: [
+      "A form of energy",
+      "A type of matter",
+      "A kind of force",
+      "A unit of temperature"
+    ],
+    answer: "A form of energy"
+  },
+  {
+    question: "Which of the following is a natural source of light?",
+    options: ["Sun", "Bulb", "Torch", "Candle"],
+    answer: "Sun"
+  },
+  {
+    question: "Which of the following is an artificial source of light?",
+    options: ["Bulb", "Sun", "Star", "Firefly"],
+    answer: "Bulb"
+  },
+  {
+    question: "Light travels in?",
+    options: [
+      "Straight lines",
+      "Curved lines",
+      "Zigzag lines",
+      "Circles"
+    ],
+    answer: "Straight lines"
+  },
+  {
+    question: "The speed of light in vacuum is?",
+    options: [
+      "3 x 10^8 m/s",
+      "3 x 10^6 m/s",
+      "3 x 10^5 m/s",
+      "3 x 10^7 m/s"
+    ],
+    answer: "3 x 10^8 m/s"
+  },
+  {
+    question: "Which of the following is NOT a property of light?",
+    options: [
+      "It can be reflected",
+      "It can be refracted",
+      "It can be absorbed",
+      "It can be tasted"
+    ],
+    answer: "It can be tasted"
+  },
+  {
+    question: "The bouncing back of light from a surface is called?",
+    options: [
+      "Reflection",
+      "Refraction",
+      "Absorption",
+      "Transmission"
+    ],
+    answer: "Reflection"
+  },
+  {
+    question: "The bending of light as it passes from one medium to another is called?",
+    options: [
+      "Refraction",
+      "Reflection",
+      "Absorption",
+      "Dispersion"
+    ],
+    answer: "Refraction"
+  },
+  {
+    question: "A mirror forms an image by?",
+    options: [
+      "Reflection",
+      "Refraction",
+      "Absorption",
+      "Diffraction"
+    ],
+    answer: "Reflection"
+  },
+  {
+    question: "A lens forms an image by?",
+    options: [
+      "Refraction",
+      "Reflection",
+      "Absorption",
+      "Diffraction"
+    ],
+    answer: "Refraction"
+  },
+  {
+    question: "Which of the following is a luminous object?",
+    options: ["Candle", "Book", "Table", "Moon"],
+    answer: "Candle"
+  },
+  {
+    question: "Which of the following is a non-luminous object?",
+    options: ["Book", "Sun", "Bulb", "Candle"],
+    answer: "Book"
+  },
+  {
+    question: "The image formed by a plane mirror is?",
+    options: [
+      "Virtual and erect",
+      "Real and inverted",
+      "Virtual and inverted",
+      "Real and erect"
+    ],
+    answer: "Virtual and erect"
+  },
+  {
+    question: "The image formed by a pinhole camera is?",
+    options: [
+      "Real and inverted",
+      "Virtual and erect",
+      "Virtual and inverted",
+      "Real and erect"
+    ],
+    answer: "Real and inverted"
+  },
+  {
+    question: "The splitting of white light into its colors is called?",
+    options: [
+      "Dispersion",
+      "Reflection",
+      "Refraction",
+      "Absorption"
+    ],
+    answer: "Dispersion"
+  },
+  {
+    question: "How many colors are in the visible spectrum?",
+    options: ["7", "6", "5", "8"],
+    answer: "7"
+  },
+  {
+    question: "Which color of light has the shortest wavelength?",
+    options: ["Violet", "Red", "Green", "Yellow"],
+    answer: "Violet"
+  },
+  {
+    question: "Which color of light has the longest wavelength?",
+    options: ["Red", "Violet", "Blue", "Green"],
+    answer: "Red"
+  },
+  {
+    question: "The angle between the incident ray and the normal is called?",
+    options: [
+      "Angle of incidence",
+      "Angle of reflection",
+      "Angle of refraction",
+      "Critical angle"
+    ],
+    answer: "Angle of incidence"
+  },
+  {
+    question: "The angle between the reflected ray and the normal is called?",
+    options: [
+      "Angle of reflection",
+      "Angle of incidence",
+      "Angle of refraction",
+      "Critical angle"
+    ],
+    answer: "Angle of reflection"
+  },
+  {
+    question: "The law of reflection states that?",
+    options: [
+      "Angle of incidence equals angle of reflection",
+      "Angle of incidence equals angle of refraction",
+      "Angle of reflection equals angle of refraction",
+      "Angle of incidence is always 90°"
+    ],
+    answer: "Angle of incidence equals angle of reflection"
+  },
+  {
+    question: "Which of the following is used to see around corners?",
+    options: ["Periscope", "Microscope", "Telescope", "Binoculars"],
+    answer: "Periscope"
+  },
+  {
+    question: "Which device uses total internal reflection?",
+    options: ["Optical fiber", "Mirror", "Lens", "Pinhole camera"],
+    answer: "Optical fiber"
+  },
+  {
+    question: "Which of the following forms a real image?",
+    options: ["Concave mirror", "Plane mirror", "Convex mirror", "Opaque object"],
+    answer: "Concave mirror"
+  },
+  {
+    question: "Which of the following always forms a virtual image?",
+    options: ["Plane mirror", "Concave mirror (far)", "Convex lens (far)", "Concave lens"],
+    answer: "Plane mirror"
+  },
+  {
+    question: "Which of the following is NOT a use of a convex lens?",
+    options: [
+      "Magnifying glass",
+      "Camera",
+      "Spectacles for short sight",
+      "Spectacles for long sight"
+    ],
+    answer: "Spectacles for short sight"
+  },
+  {
+    question: "Which of the following is used to correct long sight?",
+    options: ["Convex lens", "Concave lens", "Plane mirror", "Prism"],
+    answer: "Convex lens"
+  },
+  {
+    question: "Which of the following is used to correct short sight?",
+    options: ["Concave lens", "Convex lens", "Plane mirror", "Prism"],
+    answer: "Concave lens"
+  },
+  {
+    question: "Which of the following is NOT a property of an image formed by a plane mirror?",
+    options: [
+      "It is real",
+      "It is virtual",
+      "It is laterally inverted",
+      "It is the same size as the object"
+    ],
+    answer: "It is real"
+  },
+  {
+    question: "Which of the following is NOT a property of light?",
+    options: [
+      "It travels in straight lines",
+      "It can be refracted",
+      "It can be polarized",
+      "It can be weighed"
+    ],
+    answer: "It can be weighed"
+  },
+  {
+    question: "Which of the following is NOT a use of light?",
+    options: [
+      "Photosynthesis",
+      "Vision",
+      "Heating",
+      "Measuring mass"
+    ],
+    answer: "Measuring mass"
+  },
+  {
+    question: "Which of the following is NOT a luminous object?",
+    options: ["Moon", "Sun", "Candle", "Bulb"],
+    answer: "Moon"
+  },
+  {
+    question: "Which of the following is NOT a non-luminous object?",
+    options: ["Sun", "Book", "Table", "Moon"],
+    answer: "Sun"
+  },
+  {
+    question: "Which of the following is NOT a use of a concave mirror?",
+    options: [
+      "Shaving mirror",
+      "Headlight reflector",
+      "Magnifying glass",
+      "Solar furnace"
+    ],
+    answer: "Magnifying glass"
+  },
+  {
+    question: "Which of the following is NOT a use of a convex mirror?",
+    options: [
+      "Rear-view mirror",
+      "Security mirror",
+      "Magnifying glass",
+      "Shop mirror"
+    ],
+    answer: "Magnifying glass"
+  },
+  {
+    question: "Which of the following is NOT a property of a real image?",
+    options: [
+      "It can be formed on a screen",
+      "It is always upright",
+      "It is formed by actual intersection of rays",
+      "It is inverted"
+    ],
+    answer: "It is always upright"
+  },
+  {
+    question: "Which of the following is NOT a property of a virtual image?",
+    options: [
+      "It cannot be formed on a screen",
+      "It is formed by apparent intersection of rays",
+      "It is always inverted",
+      "It is upright"
+    ],
+    answer: "It is always inverted"
+  },
+  {
+    question: "Which of the following is NOT a color in the visible spectrum?",
+    options: ["Black", "Red", "Green", "Blue"],
+    answer: "Black"
+  },
+  {
+    question: "Which of the following is NOT a property of a shadow?",
+    options: [
+      "It is formed when light is blocked",
+      "It is always colored",
+      "It is darker in the center",
+      "It is formed behind an opaque object"
+    ],
+    answer: "It is always colored"
+  }
+];
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...ing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Light",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

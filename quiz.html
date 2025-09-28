@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb, #22c55e);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+const quizData = [
+  {
+    question: "What is matter?",
+    options: ["Anything that has mass and occupies space", "Anything that can be seen", "Anything that can move", "Anything that produces light"],
+    answer: "Anything that has mass and occupies space"
+  },
+  {
+    question: "Which of the following is NOT a state of matter?",
+    options: ["Solid", "Liquid", "Gas", "Radiation"],
+    answer: "Radiation"
+  },
+  {
+    question: "Which state of matter has a definite shape and volume?",
+    options: ["Solid", "Liquid", "Gas", "Plasma"],
+    answer: "Solid"
+  },
+  {
+    question: "Which state of matter takes the shape of its container but has a definite volume?",
+    options: ["Solid", "Liquid", "Gas", "Plasma"],
+    answer: "Liquid"
+  },
+  {
+    question: "Which state of matter has neither definite shape nor definite volume?",
+    options: ["Solid", "Liquid", "Gas", "Plasma"],
+    answer: "Gas"
+  },
+  {
+    question: "What are the tiny particles that make up matter called?",
+    options: ["Atoms and molecules", "Cells", "Ions", "Electrons"],
+    answer: "Atoms and molecules"
+  },
+  {
+    question: "Which of the following is evidence for the particle nature of matter?",
+    options: ["Diffusion", "Reflection", "Refraction", "Conduction"],
+    answer: "Diffusion"
+  },
+  {
+    question: "The random movement of particles suspended in a fluid is called?",
+    options: ["Brownian motion", "Diffusion", "Evaporation", "Condensation"],
+    answer: "Brownian motion"
+  },
+  {
+    question: "Which process changes a solid directly into a gas?",
+    options: ["Sublimation", "Melting", "Condensation", "Freezing"],
+    answer: "Sublimation"
+  },
+  {
+    question: "Which process changes a liquid to a gas at any temperature?",
+    options: ["Evaporation", "Boiling", "Condensation", "Melting"],
+    answer: "Evaporation"
+  },
+  {
+    question: "What is the process of changing from liquid to solid called?",
+    options: ["Freezing", "Melting", "Sublimation", "Condensation"],
+    answer: "Freezing"
+  },
+  {
+    question: "Which of the following is NOT a property of matter?",
+    options: ["It has mass", "It occupies space", "It can be seen", "It is made up of particles"],
+    answer: "It can be seen"
+  },
+  {
+    question: "What is the process of changing from gas to liquid called?",
+    options: ["Condensation", "Evaporation", "Melting", "Sublimation"],
+    answer: "Condensation"
+  },
+  {
+    question: "Which state of matter has particles that are closely packed and vibrate in fixed positions?",
+    options: ["Solid", "Liquid", "Gas", "Plasma"],
+    answer: "Solid"
+  },
+  {
+    question: "Which state of matter has particles that move freely in all directions?",
+    options: ["Gas", "Solid", "Liquid", "Plasma"],
+    answer: "Gas"
+  },
+  {
+    question: "Which of the following is an example of sublimation?",
+    options: ["Iodine crystals", "Melting ice", "Boiling water", "Condensing steam"],
+    answer: "Iodine crystals"
+  },
+  {
+    question: "What is the smallest unit of matter?",
+    options: ["Atom", "Molecule", "Cell", "Electron"],
+    answer: "Atom"
+  },
+  {
+    question: "Which of the following is NOT a change of state?",
+    options: ["Diffusion", "Melting", "Freezing", "Condensation"],
+    answer: "Diffusion"
+  },
+  {
+    question: "Which of the following is a property of liquids?",
+    options: ["Definite volume", "Definite shape", "No volume", "No mass"],
+    answer: "Definite volume"
+  },
+  {
+    question: "Which of the following is NOT a property of solids?",
+    options: ["Definite shape", "Definite volume", "Particles far apart", "Particles closely packed"],
+    answer: "Particles far apart"
+  },
+  {
+    question: "Which of the following is NOT a state of matter studied in SS1 Physics?",
+    options: ["Plasma", "Solid", "Liquid", "Gas"],
+    answer: "Plasma"
+  },
+  {
+    question: "What is the process of changing from solid to liquid called?",
+    options: ["Melting", "Freezing", "Condensation", "Sublimation"],
+    answer: "Melting"
+  },
+  {
+    question: "Which of the following is NOT a characteristic of gases?",
+    options: ["Definite shape", "No definite shape", "No definite volume", "Particles far apart"],
+    answer: "Definite shape"
+  },
+  {
+    question: "Which of the following is a mixture?",
+    options: ["Air", "Water", "Iron", "Gold"],
+    answer: "Air"
+  },
+  {
+    question: "Which of the following is a compound?",
+    options: ["Water", "Air", "Iron", "Gold"],
+    answer: "Water"
+  },
+  {
+    question: "Which of the following is an element?",
+    options: ["Iron", "Water", "Air", "Salt"],
+    answer: "Iron"
+  },
+  {
+    question: "Which of the following is NOT a property of matter?",
+    options: ["It can conduct electricity", "It has mass", "It occupies space", "It is made up of particles"],
+    answer: "It can conduct electricity"
+  },
+  {
+    question: "Which of the following is NOT a reason for studying matter?",
+    options: ["To understand natural phenomena", "To explain the behavior of materials", "To learn how to cook", "To invent useful devices"],
+    answer: "To learn how to cook"
+  },
+  {
+    question: "Which of the following is NOT a particle of matter?",
+    options: ["Atom", "Molecule", "Cell", "Ion"],
+    answer: "Cell"
+  },
+  {
+    question: "Which of the following is NOT a change of state?",
+    options: ["Diffusion", "Melting", "Freezing", "Condensation"],
+    answer: "Diffusion"
+  },
+  {
+    question: "Which of the following is NOT a property of solids?",
+    options: ["Definite shape", "Definite volume", "Particles far apart", "Particles closely packed"],
+    answer: "Particles far apart"
+  },
+  {
+    question: "Which of the following is NOT a property of liquids?",
+    options: ["Definite volume", "Takes shape of container", "Particles closely packed", "Definite shape"],
+    answer: "Definite shape"
+  },
+  {
+    question: "Which of the following is NOT a property of gases?",
+    options: ["No definite shape", "No definite volume", "Particles far apart", "Definite volume"],
+    answer: "Definite volume"
+  },
+  {
+    question: "Which of the following is NOT a state of matter?",
+    options: ["Solid", "Liquid", "Gas", "Energy"],
+    answer: "Energy"
+  },
+  {
+    question: "Which of the following is NOT a property of matter?",
+    options: ["It has mass", "It occupies space", "It is made up of particles", "It can be seen"],
+    answer: "It can be seen"
+  },
+  {
+    question: "Which of the following is NOT a process of changing state?",
+    options: ["Melting", "Freezing", "Diffusion", "Condensation"],
+    answer: "Diffusion"
+  },
+  {
+    question: "Which of the following is NOT a property of matter?",
+    options: ["It has mass", "It occupies space", "It is made up of particles", "It can fly"],
+    answer: "It can fly"
+  },
+  {
+    question: "Which of the following is NOT a property of matter?",
+    options: ["It has mass", "It occupies space", "It is made up of particles", "It can talk"],
+    answer: "It can talk"
+  },
+  {
+    question: "Which of the following is NOT a property of matter?",
+    options: ["It has mass", "It occupies space", "It is made up of particles", "It can think"],
+    answer: "It can think"
+  },
+  {
+    question: "Which of the following is NOT a property of matter?",
+    options: ["It has mass", "It occupies space", "It is made up of particles", "It can eat"],
+    answer: "It can eat"
+  }
+];
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Matter",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6, #93c5fd);
+     color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+
+ // ...existing code...
+const quizData = [
+  {
+    question: "What is heat?",
+    options: [
+      "A form of energy",
+      "A type of matter",
+      "A kind of force",
+      "A unit of temperature"
+    ],
+    answer: "A form of energy"
+  },
+  {
+    question: "What is temperature?",
+    options: [
+      "Degree of hotness or coldness",
+      "Amount of heat in a body",
+      "Form of energy",
+      "Type of matter"
+    ],
+    answer: "Degree of hotness or coldness"
+  },
+  {
+    question: "The SI unit of heat is?",
+    options: ["Joule", "Kelvin", "Celsius", "Calorie"],
+    answer: "Joule"
+  },
+  {
+    question: "The SI unit of temperature is?",
+    options: ["Kelvin", "Celsius", "Fahrenheit", "Joule"],
+    answer: "Kelvin"
+  },
+  {
+    question: "Which instrument is used to measure temperature?",
+    options: ["Thermometer", "Barometer", "Manometer", "Hygrometer"],
+    answer: "Thermometer"
+  },
+  {
+    question: "Which instrument is used to measure heat?",
+    options: ["Calorimeter", "Thermometer", "Barometer", "Manometer"],
+    answer: "Calorimeter"
+  },
+  {
+    question: "Which of the following is NOT a unit of temperature?",
+    options: ["Joule", "Kelvin", "Celsius", "Fahrenheit"],
+    answer: "Joule"
+  },
+  {
+    question: "Which of the following is NOT a unit of heat?",
+    options: ["Kelvin", "Joule", "Calorie", "Kilojoule"],
+    answer: "Kelvin"
+  },
+  {
+    question: "Which scale is NOT used for measuring temperature?",
+    options: ["Newton", "Celsius", "Fahrenheit", "Kelvin"],
+    answer: "Newton"
+  },
+  {
+    question: "Which of the following is a good conductor of heat?",
+    options: ["Copper", "Wood", "Plastic", "Rubber"],
+    answer: "Copper"
+  },
+  {
+    question: "Which of the following is a poor conductor of heat?",
+    options: ["Wood", "Copper", "Aluminium", "Iron"],
+    answer: "Wood"
+  },
+  {
+    question: "What is the freezing point of water in Celsius?",
+    options: ["0°C", "100°C", "32°C", "273°C"],
+    answer: "0°C"
+  },
+  {
+    question: "What is the boiling point of water in Celsius?",
+    options: ["100°C", "0°C", "273°C", "32°C"],
+    answer: "100°C"
+  },
+  {
+    question: "What is the boiling point of water in Kelvin?",
+    options: ["373 K", "273 K", "100 K", "0 K"],
+    answer: "373 K"
+  },
+  {
+    question: "What is the freezing point of water in Kelvin?",
+    options: ["273 K", "373 K", "0 K", "100 K"],
+    answer: "273 K"
+  },
+  {
+    question: "Which of the following is NOT a method of heat transfer?",
+    options: ["Reflection", "Conduction", "Convection", "Radiation"],
+    answer: "Reflection"
+  },
+  {
+    question: "Heat transfer in solids mainly occurs by?",
+    options: ["Conduction", "Convection", "Radiation", "Evaporation"],
+    answer: "Conduction"
+  },
+  {
+    question: "Heat transfer in liquids and gases mainly occurs by?",
+    options: ["Convection", "Conduction", "Radiation", "Evaporation"],
+    answer: "Convection"
+  },
+  {
+    question: "Heat transfer from the sun to the earth occurs by?",
+    options: ["Radiation", "Conduction", "Convection", "Evaporation"],
+    answer: "Radiation"
+  },
+  {
+    question: "Which of the following is a good insulator?",
+    options: ["Plastic", "Copper", "Aluminium", "Iron"],
+    answer: "Plastic"
+  },
+  {
+    question: "Which of the following is NOT a property of heat?",
+    options: [
+      "It flows from hot to cold",
+      "It is a form of energy",
+      "It can be measured in joules",
+      "It is a type of matter"
+    ],
+    answer: "It is a type of matter"
+  },
+  {
+    question: "Which of the following is NOT a property of temperature?",
+    options: [
+      "It is a measure of hotness",
+      "It is measured in Kelvin",
+      "It is a form of energy",
+      "It can be measured with a thermometer"
+    ],
+    answer: "It is a form of energy"
+  },
+  {
+    question: "What is the normal human body temperature in Celsius?",
+    options: ["37°C", "27°C", "100°C", "0°C"],
+    answer: "37°C"
+  },
+  {
+    question: "What is the normal human body temperature in Kelvin?",
+    options: ["310 K", "273 K", "373 K", "100 K"],
+    answer: "310 K"
+  },
+  {
+    question: "Which of the following is NOT a temperature scale?",
+    options: ["Joule", "Celsius", "Fahrenheit", "Kelvin"],
+    answer: "Joule"
+  },
+  {
+    question: "Which of the following is NOT a use of heat?",
+    options: [
+      "Cooking food",
+      "Melting ice",
+      "Measuring mass",
+      "Drying clothes"
+    ],
+    answer: "Measuring mass"
+  },
+  {
+    question: "Which of the following is NOT a use of temperature?",
+    options: [
+      "Measuring hotness",
+      "Weather forecasting",
+      "Measuring length",
+      "Checking fever"
+    ],
+    answer: "Measuring length"
+  },
+  {
+    question: "Which of the following is NOT a method of reducing heat loss?",
+    options: [
+      "Using insulators",
+      "Double glazing",
+      "Painting black",
+      "Lagging pipes"
+    ],
+    answer: "Painting black"
+  },
+  {
+    question: "Which of the following is NOT a method of increasing heat transfer?",
+    options: [
+      "Using insulators",
+      "Using conductors",
+      "Increasing surface area",
+      "Painting white"
+    ],
+    answer: "Using insulators"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting heat transfer?",
+    options: [
+      "Color of surface",
+      "Surface area",
+      "Type of material",
+      "Shape of object"
+    ],
+    answer: "Shape of object"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting temperature rise?",
+    options: [
+      "Amount of heat supplied",
+      "Mass of substance",
+      "Specific heat capacity",
+      "Color of substance"
+    ],
+    answer: "Color of substance"
+  },
+  {
+    question: "What is specific heat capacity?",
+    options: [
+      "Amount of heat required to raise the temperature of 1 kg by 1 K",
+      "Amount of heat required to melt 1 kg",
+      "Amount of heat required to boil 1 kg",
+      "Amount of heat required to freeze 1 kg"
+    ],
+    answer: "Amount of heat required to raise the temperature of 1 kg by 1 K"
+  },
+  {
+    question: "Which of the following has the highest specific heat capacity?",
+    options: ["Water", "Iron", "Copper", "Aluminium"],
+    answer: "Water"
+  },
+  {
+    question: "What is latent heat?",
+    options: [
+      "Heat required to change state without temperature change",
+      "Heat required to raise temperature",
+      "Heat required to lower temperature",
+      "Heat required to increase pressure"
+    ],
+    answer: "Heat required to change state without temperature change"
+  },
+  {
+    question: "Which of the following is NOT a change of state?",
+    options: [
+      "Evaporation",
+      "Melting",
+      "Condensation",
+      "Reflection"
+    ],
+    answer: "Reflection"
+  },
+  {
+    question: "What is the boiling point of water in Fahrenheit?",
+    options: ["212°F", "100°F", "32°F", "0°F"],
+    answer: "212°F"
+  },
+  {
+    question: "What is the freezing point of water in Fahrenheit?",
+    options: ["32°F", "0°F", "100°F", "212°F"],
+    answer: "32°F"
+  },
+  {
+    question: "Which of the following is NOT a method of measuring temperature?",
+    options: [
+      "Thermometer",
+      "Thermocouple",
+      "Barometer",
+      "Liquid crystal strip"
+    ],
+    answer: "Barometer"
+  }
+];
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...ing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Heat",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

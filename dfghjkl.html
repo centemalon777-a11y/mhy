@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard - LearnHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* {margin: 0; padding: 0; box-sizing: border-box;}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1e3a8a, #9333ea, #0ea5e9);
+  min-height: 100vh;
+  color: #fff;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* glowing abstract circles */
+body::before, body::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  filter: blur(120px);
+  z-index: 0;
+}
+body::before { width: 400px; height: 400px; top: -120px; left: -100px; }
+body::after { width: 450px; height: 450px; bottom: -150px; right: -120px; }
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 25px;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(12px);
+  z-index: 2;
+  position: relative;
+}
+header h1 { font-size: 1.9rem; color: #38bdf8; font-weight: 700; }
+header button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #22c55e;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+header button:hover { background: #16a34a; }
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  background: rgba(0,0,0,0.25);
+  padding: 12px;
+  position: relative;
+  z-index: 2;
+}
+nav button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+nav button.active, nav button:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 15px;
+  position: relative;
+  z-index: 2;
+}
+.section { display: none; }
+.section.active { display: block; }
+
+.card {
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+}
+
+h2 { margin-bottom: 15px; color: #f1f5f9; font-weight: 600; }
+
+.event-list, .notifications, .calendar {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.2);
+  padding: 15px;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.06);
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+.register-btn {
+  padding: 6px 14px;
+  background: #0ea5e9;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.register-btn:hover { background: #0284c7; }
+.register-btn.registered { background: #22c55e; cursor: default; }
+
+.notification-badge {
+  background: red;
+  color: #fff;
+  border-radius: 50%;
+  padding: 3px 8px;
+  font-size: 0.8rem;
+  margin-left: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+td, th {
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px;
+  text-align: center;
+}
+th { background: rgba(14,165,233,0.8); }
+
+.btn {
+  margin: 25px auto;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #09ea5e;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.btn:hover { background: #059669; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 Student Dashboard</h1>
+  <button id="logoutBtn">Logout</button>
+</header>
+
+<nav>
+  <button class="nav-btn active" data-section="eventsSection">Events <span id="eventBadge" class="notification-badge" style="display:none;">0</span></button>
+  <button class="nav-btn" data-section="calendarSection">Calendar</button>
+  <button class="nav-btn" data-section="notificationsSection">Notifications <span id="msgBadge" class="notification-badge" style="display:none;">0</span></button>
+</nav>
+
+<div class="container">
+  <!-- Events Section -->
+  <div class="section active" id="eventsSection">
+    <div class="card">
+      <h2>Upcoming Events</h2>
+      <div class="event-list" id="eventList"></div>
+    </div>
+  </div>
+
+  <!-- Calendar Section -->
+  <div class="section" id="calendarSection">
+    <div class="card">
+      <h2>My Calendar</h2>
+      <div class="calendar" id="calendarView"></div>
+    </div>
+  </div>
+
+  <!-- Notifications Section -->
+  <div class="section" id="notificationsSection">
+    <div class="card">
+      <h2>Notifications</h2>
+      <div class="notifications" id="notificationsList"></div>
+    </div>
+  </div>
+</div>
+
+<center>
+  <a href="ytreee.html"><button class="btn">Register</button></a>
+</center>
+
+<script>
+// ===== Navigation =====
+const navButtons = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.section');
+navButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    navButtons.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    sections.forEach(sec=>sec.classList.remove('active'));
+    document.getElementById(btn.dataset.section).classList.add('active');
+  });
+});
+
+// ===== Logout =====
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  localStorage.removeItem('currentUser');
+  window.location.href='login.html';
+});
+
+// ===== Current User =====
+const currentUser = localStorage.getItem('currentUser') || 'guest';
+
+// ===== Events =====
+let events = [
+  {id:1,title:"Math Test",date:"2025-09-30",registered:[]},
+  {id:2,title:"Science Test",date:"2025-10-05",registered:[]},
+  {id:3,title:"English Quiz",date:"2025-10-10",registered:[]}
+];
+events = JSON.parse(localStorage.getItem('events')) || events;
+
+const eventListEl = document.getElementById('eventList');
+const eventBadge = document.getElementById('eventBadge');
+
+function renderEvents(){
+  eventListEl.innerHTML = '';
+  let newEventCount = 0;
+  events.forEach(ev=>{
+    const registered = ev.registered.includes(currentUser);
+    if(!registered) newEventCount++;
+    const div = document.createElement('div');
+    div.classList.add('event-item');
+    div.innerHTML = `<span><strong>${ev.title}</strong> - ${new Date(ev.date).toDateString()}</span>
+      <button class="register-btn ${registered ? "registered" : ""}" ${registered?'disabled':''}>
+        ${registered ? "Registered" : "Register"}
+      </button>`;
+    div.querySelector('button').addEventListener('click', ()=>{
+      if(!ev.registered.includes(currentUser)){
+        ev.registered.push(currentUser);
+        localStorage.setItem('events', JSON.stringify(events));
+        renderEvents();
+        addNotification(`You registered for ${ev.title}`);
+        renderCalendar();
+      }
+    });
+    eventListEl.appendChild(div);
+  });
+  if(newEventCount>0){ eventBadge.style.display='inline'; eventBadge.textContent=newEventCount; }
+  else eventBadge.style.display='none';
+}
+renderEvents();
+
+// ===== Notifications =====
+const notificationsList = document.getElementById('notificationsList');
+const msgBadge = document.getElementById('msgBadge');
+
+function addNotification(text){
+  let notifications = JSON.parse(localStorage.getItem('notifications_' + currentUser)||'[]');
+  notifications.push({text, ts: Date.now()});
+  localStorage.setItem('notifications_' + currentUser, JSON.stringify(notifications));
+  renderNotifications();
+}
+
+function renderNotifications(){
+  let notifications = JSON.parse(localStorage.getItem('notifications_' + currentUser)||'[]');
+  notificationsList.innerHTML = '';
+  notifications.slice().reverse().forEach(n=>{
+    const div = document.createElement('div');
+    div.textContent = `${n.text} (${new Date(n.ts).toLocaleString()})`;
+    notificationsList.appendChild(div);
+  });
+  msgBadge.style.display = notifications.length>0?'inline':'none';
+  msgBadge.textContent = notifications.length;
+}
+renderNotifications();
+
+// ===== Calendar =====
+const calendarView = document.getElementById('calendarView');
+function renderCalendar(){
+  calendarView.innerHTML = '';
+  const table = document.createElement('table');
+  table.innerHTML = `<tr><th>Event</th><th>Date</th></tr>`;
+  events.forEach(ev=>{
+    if(ev.registered.includes(currentUser)){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${ev.title}</td><td>${new Date(ev.date).toDateString()}</td>`;
+      table.appendChild(tr);
+    }
+  });
+  calendarView.appendChild(table);
+}
+renderCalendar();
+</script>
+</body>
+</html>

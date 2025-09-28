@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnHub — Student Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:linear-gradient(135deg,#0ea5e9,#1e293b);color:#fff;min-height:100vh;padding:20px;}
+header{text-align:center;margin-bottom:30px;}
+header h1{color:#38bdf8;}
+section{margin-bottom:40px;}
+.card{background:rgba(0,0,0,0.4);padding:20px;border-radius:12px;margin-bottom:20px;}
+.card h2{margin-bottom:15px;color:#0ea5e9;}
+.card button{padding:10px 15px;border:none;border-radius:8px;background:#0ea5e9;color:#fff;font-weight:600;cursor:pointer;}
+.card button:hover{background:#38bdf8;}
+.registered{background:#22c55e;cursor:default;}
+input[type="text"]{padding:10px;border-radius:6px;border:none;width:100%;margin-bottom:10px;}
+.message{background:rgba(255,255,255,0.1);padding:10px;border-radius:8px;margin-bottom:10px;}
+.message strong{color:#38bdf8;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>👋 Welcome, <span id="studentName"></span>!</h1>
+</header>
+
+<section>
+  <div class="card">
+    <h2>Upcoming Tests & Events</h2>
+    <div id="eventsList"></div>
+  </div>
+</section>
+
+<section>
+  <div class="card">
+    <h2>Admin Messages</h2>
+    <div id="messagesContainer"></div>
+    <div style="margin-top:10px;">
+      <input type="text" id="messageInput" placeholder="Type a message to admin...">
+      <button onclick="sendStudentMessage()">Send</button>
+    </div>
+  </div>
+</section>
+
+<script>
+const currentUser = localStorage.getItem('currentUser');
+const studentName = localStorage.getItem('user_' + currentUser) || currentUser;
+document.getElementById('studentName').textContent = studentName;
+
+// Sample events
+const events = [
+  {id:1, date:"2025-10-05", title:"Science Test"},
+  {id:2, date:"2025-10-12", title:"Math Quiz"},
+  {id:3, date:"2025-10-20", title:"Cultural Exam"}
+];
+
+// Load registered events per student
+let registeredEvents = JSON.parse(localStorage.getItem('registeredEvents_' + currentUser)) || [];
+
+const eventsList = document.getElementById('eventsList');
+function renderEvents(){
+  eventsList.innerHTML = "";
+  events.forEach(event => {
+    const div = document.createElement('div');
+    div.innerHTML = `<strong>${event.title} (${new Date(event.date).toDateString()})</strong>`;
+    const isRegistered = registeredEvents.includes(event.id);
+    const btn = document.createElement('button');
+    btn.textContent = isRegistered ? '✅ Registered' : 'Register';
+    if(isRegistered) btn.classList.add('registered');
+    btn.onclick = ()=>{
+      if(!registeredEvents.includes(event.id)){
+        registeredEvents.push(event.id);
+        localStorage.setItem('registeredEvents_' + currentUser, JSON.stringify(registeredEvents));
+        renderEvents();
+      }
+    };
+    div.appendChild(btn);
+    eventsList.appendChild(div);
+  });
+}
+renderEvents();
+
+// Messages section
+let messages = JSON.parse(localStorage.getItem('messages_' + currentUser)) || [];
+const messagesContainer = document.getElementById('messagesContainer');
+function renderMessages(){
+  messagesContainer.innerHTML = "";
+  messages.forEach(msg => {
+    const div = document.createElement('div');
+    div.className = 'message';
+    div.innerHTML = `<strong>${msg.from}:</strong> ${msg.text}`;
+    messagesContainer.appendChild(div);
+  });
+}
+renderMessages();
+
+function sendStudentMessage(){
+  const input = document.getElementById('messageInput');
+  const text = input.value.trim();
+  if(!text) return;
+  messages.push({from: studentName, text});
+  localStorage.setItem('messages_' + currentUser, JSON.stringify(messages));
+  input.value = '';
+  renderMessages();
+}
+</script>
+
+</body>
+</html>

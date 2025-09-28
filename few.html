@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Question Bank</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3a8a, #9333ea);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      font-size: 2rem;
+      font-weight: bold;
+      background: rgba(0,0,0,0.5);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+    }
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      display: grid;
+      gap: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      transition: transform 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); }
+    .question {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .answer {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 8px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      background: #0ea5e9;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover { background: #38bdf8; }
+  </style>
+</head>
+<body>
+  <header>📘 Physics Question Bank (100 Questions)</header>
+  <div class="container" id="questionBank"></div>
+
+<script>
+const questions = [
+  { q: "1. State Newton’s First Law of Motion and give one example.", a: "A body will remain at rest or in uniform motion unless acted on by a force. Example: A book stays on a table until pushed." },
+  { q: "2. State Newton’s Second Law of Motion.", a: "Force = mass × acceleration (F = ma). The rate of change of momentum is proportional to the applied force." },
+  { q: "3. State Newton’s Third Law of Motion.", a: "For every action, there is an equal and opposite reaction." },
+  { q: "4. Define velocity.", a: "Velocity is the rate of change of displacement with direction." },
+  { q: "5. Define acceleration.", a: "Acceleration is the rate of change of velocity with time." },
+  { q: "6. A car accelerates uniformly from rest at 2 m/s² for 10 s. Find its velocity.", a: "v = u + at = 0 + 2×10 = 20 m/s." },
+  { q: "7. Differentiate between distance and displacement.", a: "Distance is the total path covered (scalar). Displacement is the shortest straight-line change in position (vector)." },
+  { q: "8. A body of mass 5 kg is acted on by a force of 20 N. Find its acceleration.", a: "F=ma → a=F/m=20/5=4 m/s²." },
+  { q: "9. Define momentum.", a: "Momentum = mass × velocity (p = mv)." },
+  { q: "10. State the principle of conservation of momentum.", a: "The total momentum of a closed system remains constant if no external force acts." },
+  { q: "11. What is work in physics?", a: "Work is done when a force is applied to move an object in the direction of the force. W=F×d×cosθ." },
+  { q: "12. A force of 10 N moves an object 5 m in the same direction. Find the work done.", a: "W=F×d=10×5=50 J." },
+  { q: "13. Define power.", a: "Power is the rate of doing work. P = W/t." },
+  { q: "14. A machine does 200 J of work in 20 s. Find its power.", a: "P=W/t=200/20=10 W." },
+  { q: "15. Define energy.", a: "Energy is the capacity to do work." },
+  { q: "16. State the law of conservation of energy.", a: "Energy cannot be created or destroyed, only transformed from one form to another." },
+  { q: "17. What is kinetic energy?", a: "Energy of motion, KE=½mv²." },
+  { q: "18. A body of mass 2 kg moves at 3 m/s. Find its KE.", a: "KE=½×2×3²=9 J." },
+  { q: "19. What is potential energy?", a: "Energy possessed by a body due to its position or configuration. PE=mgh." },
+  { q: "20. A 5 kg mass is lifted 4 m high. Find its PE (g=10 m/s²).", a: "PE=mgh=5×10×4=200 J." },
+
+  { q: "1. State Newton’s First Law of Motion and give one example.", a: "A body will remain at rest or in uniform motion unless acted on by a force. Example: A book stays on a table until pushed." },
+  { q: "2. State Newton’s Second Law of Motion.", a: "Force = mass × acceleration (F = ma). The rate of change of momentum is proportional to the applied force." },
+  { q: "3. State Newton’s Third Law of Motion.", a: "For every action, there is an equal and opposite reaction." },
+  { q: "4. Define velocity.", a: "Velocity is the rate of change of displacement with direction." },
+  { q: "5. Define acceleration.", a: "Acceleration is the rate of change of velocity with time." },
+  { q: "6. A car accelerates uniformly from rest at 2 m/s² for 10 s. Find its velocity.", a: "v = u + at = 0 + 2×10 = 20 m/s." },
+  { q: "7. Differentiate between distance and displacement.", a: "Distance is the total path covered (scalar). Displacement is the shortest straight-line change in position (vector)." },
+  { q: "8. A body of mass 5 kg is acted on by a force of 20 N. Find its acceleration.", a: "F=ma → a=F/m=20/5=4 m/s²." },
+  { q: "9. Define momentum.", a: "Momentum = mass × velocity (p = mv)." },
+  { q: "10. State the principle of conservation of momentum.", a: "The total momentum of a closed system remains constant if no external force acts." },
+  { q: "11. What is work in physics?", a: "Work is done when a force is applied to move an object in the direction of the force. W=F×d×cosθ." },
+  { q: "12. A force of 10 N moves an object 5 m in the same direction. Find the work done.", a: "W=F×d=10×5=50 J." },
+  { q: "13. Define power.", a: "Power is the rate of doing work. P = W/t." },
+  { q: "14. A machine does 200 J of work in 20 s. Find its power.", a: "P=W/t=200/20=10 W." },
+  { q: "15. Define energy.", a: "Energy is the capacity to do work." },
+  { q: "16. State the law of conservation of energy.", a: "Energy cannot be created or destroyed, only transformed from one form to another." },
+  { q: "17. What is kinetic energy?", a: "Energy of motion, KE=½mv²." },
+  { q: "18. A body of mass 2 kg moves at 3 m/s. Find its KE.", a: "KE=½×2×3²=9 J." },
+  { q: "19. What is potential energy?", a: "Energy possessed by a body due to its position or configuration. PE=mgh." },
+  { q: "20. A 5 kg mass is lifted 4 m high. Find its PE (g=10 m/s²).", a: "PE=mgh=5×10×4=200 J." },
+
+  // --- Motion, Fluids, Heat ---
+  { q: "21. Define density.", a: "Density = mass/volume (ρ = m/V)." },
+  { q: "22. A body of mass 200 g occupies 100 cm³. Find its density.", a: "ρ=m/V=0.2/0.0001=2000 kg/m³." },
+  { q: "23. Define pressure.", a: "Pressure = Force / Area (P=F/A)." },
+  { q: "24. A force of 50 N acts on area 0.1 m². Find the pressure.", a: "P=F/A=50/0.1=500 N/m²." },
+  { q: "25. State Pascal’s principle.", a: "Pressure applied to a fluid in a closed container is transmitted equally in all directions." },
+  { q: "26. State Archimedes’ principle.", a: "An object immersed in a fluid experiences an upthrust equal to the weight of fluid displaced." },
+  { q: "27. Define heat capacity.", a: "Heat capacity is the amount of heat required to raise the temperature of a body by 1°C." },
+  { q: "28. Define specific heat capacity.", a: "Heat required to raise the temperature of 1 kg of a substance by 1°C." },
+  { q: "29. State the modes of heat transfer.", a: "Conduction, Convection, Radiation." },
+  { q: "30. Which medium is needed for conduction?", a: "A material medium (solids especially metals)." },
+
+  // --- Waves, Light, Sound ---
+  { q: "31. Define a wave.", a: "A wave is a disturbance that transfers energy without transfer of matter." },
+  { q: "32. State the two types of waves.", a: "Transverse waves and Longitudinal waves." },
+  { q: "33. Define frequency.", a: "Number of complete oscillations per second (Hz)." },
+  { q: "34. Define wavelength.", a: "The distance between two successive crests or troughs of a wave." },
+  { q: "35. Define amplitude.", a: "Maximum displacement from the mean position." },
+  { q: "36. A wave has frequency 200 Hz and wavelength 1.5 m. Find its speed.", a: "v=fλ=200×1.5=300 m/s." },
+  { q: "37. Define reflection of light.", a: "Bouncing back of light rays when they strike a surface." },
+  { q: "38. State the laws of reflection.", a: "i) Angle of incidence = Angle of reflection. ii) Incident ray, reflected ray, and normal lie in same plane." },
+  { q: "39. Define refraction.", a: "Bending of light as it passes from one medium to another." },
+  { q: "40. State Snell’s Law.", a: "n1 sin i = n2 sin r (refractive indices)." },
+
+  // --- Electricity & Magnetism ---
+  { q: "41. Define electric current.", a: "Current is the rate of flow of charge, I=Q/t." },
+  { q: "42. Define potential difference.", a: "Work done to move unit charge between two points." },
+  { q: "43. State Ohm’s Law.", a: "V = IR (voltage is proportional to current if temperature is constant)." },
+  { q: "44. A resistor has 10 Ω resistance and 2 A current flows. Find V.", a: "V=IR=10×2=20 V." },
+  { q: "45. Define resistance.", a: "Opposition offered to current flow in a conductor." },
+  { q: "46. Define electrical power.", a: "Power = VI = I²R = V²/R." },
+  { q: "47. A bulb is rated 60 W, 240 V. Find its current.", a: "P=VI → I=P/V=60/240=0.25 A." },
+  { q: "48. State Coulomb’s Law.", a: "Electrostatic force between two charges is proportional to product of charges and inversely proportional to square of distance." },
+  { q: "49. Define capacitance.", a: "Capacitance is the ability of a capacitor to store charge, C=Q/V." },
+  { q: "50. Unit of capacitance?", a: "Farad (F)." },
+
+  // --- Magnetism, Modern Physics ---
+  { q: "51. Define magnetism.", a: "Property of matter in which certain materials attract iron or produce magnetic fields." },
+  { q: "52. State the right-hand grip rule.", a: "Curl fingers in direction of current, thumb gives direction of magnetic field." },
+  { q: "53. Define electromagnet.", a: "A temporary magnet made by passing current through a coil around soft iron." },
+  { q: "54. State Faraday’s Law of Electromagnetic Induction.", a: "Induced emf is proportional to rate of change of magnetic flux." },
+  { q: "55. Define transformer.", a: "A device that increases or decreases AC voltage using mutual induction." },
+  { q: "56. State the principle of conservation of charge.", a: "Charge can neither be created nor destroyed but only transferred." },
+  { q: "57. Define half-life.", a: "Time taken for half the radioactive nuclei in a sample to decay." },
+  { q: "58. Define nuclear fission.", a: "Splitting of a heavy nucleus into two smaller ones with release of energy." },
+  { q: "59. Define nuclear fusion.", a: "Combining of light nuclei to form heavier nucleus with release of energy." },
+  { q: "60. Which reaction powers the sun?", a: "Nuclear fusion of hydrogen into helium." },
+
+  // --- More Problem Solving ---
+  { q: "61. A 2 kg body moves at 10 m/s. Find momentum.", a: "p=mv=2×10=20 kgm/s." },
+  { q: "62. Define impulse.", a: "Impulse = Force × time = Change in momentum." },
+  { q: "63. A force of 5 N acts for 4 s. Find impulse.", a: "Impulse=F×t=5×4=20 Ns." },
+  { q: "64. State Hooke’s Law.", a: "Extension is proportional to applied force (F=kx) within elastic limit." },
+  { q: "65. A spring constant is 200 N/m. It is stretched by 0.05 m. Find F.", a: "F=kx=200×0.05=10 N." },
+  { q: "66. Define centripetal force.", a: "Force required to keep a body moving in a circular path." },
+  { q: "67. State the expression for centripetal force.", a: "Fc = mv²/r." },
+  { q: "68. Define torque.", a: "Turning effect of a force about a pivot. τ = F×d." },
+  { q: "69. A lever arm of 0.2 m has a force 50 N applied. Find torque.", a: "τ=Fd=50×0.2=10 Nm." },
+  { q: "70. Define equilibrium.", a: "A body is in equilibrium if resultant force and resultant moment are zero." },
+
+  // --- More Mixed Questions ---
+  { q: "71. Define latent heat.", a: "Heat absorbed/released during change of state without temperature change." },
+  { q: "72. Define specific latent heat.", a: "Heat required to change state of 1 kg of a substance without temp change." },
+  { q: "73. State Boyle’s Law.", a: "At constant temperature, pressure is inversely proportional to volume of a gas." },
+  { q: "74. State Charles’ Law.", a: "At constant pressure, volume is directly proportional to temperature (Kelvin)." },
+  { q: "75. State the Pressure Law.", a: "At constant volume, pressure is directly proportional to absolute temperature." },
+  { q: "76. Define internal energy.", a: "Total kinetic + potential energies of molecules of a system." },
+  { q: "77. Define entropy.", a: "Measure of disorder in a system." },
+  { q: "78. What is simple harmonic motion?", a: "Motion in which acceleration is proportional to displacement and opposite in direction." },
+  { q: "79. Give examples of SHM.", a: "Pendulum, vibrating spring, tuning fork." },
+  { q: "80. Expression for period of simple pendulum?", a: "T = 2π√(l/g)." },
+
+  // --- Final 20 Questions ---
+  { q: "81. Define resonance.", a: "Phenomenon where a system oscillates with maximum amplitude at natural frequency." },
+  { q: "82. Define Doppler effect.", a: "Apparent change in frequency of a wave due to relative motion of source and observer." },
+  { q: "83. State Einstein’s mass-energy relation.", a: "E = mc²." },
+  { q: "84. Define photoelectric effect.", a: "Emission of electrons from a metal surface when light shines on it." },
+  { q: "85. State Planck’s quantum hypothesis.", a: "Energy is emitted/absorbed in discrete packets called quanta (E=hf)." },
+  { q: "86. Define work function.", a: "Minimum energy required to eject electron from metal surface." },
+  { q: "87. What is semiconductor?", a: "Material with conductivity between conductor and insulator (e.g., silicon)." },
+  { q: "88. Define diode.", a: "Electronic component that allows current to flow in only one direction." },
+  { q: "89. Define transistor.", a: "Semiconductor device used for switching and amplification." },
+  { q: "90. State two uses of X-rays.", a: "Medical imaging, security scanning." },
+  { q: "91. Define scalar quantity.", a: "Physical quantity with magnitude only (e.g., mass, speed)." },
+  { q: "92. Define vector quantity.", a: "Quantity with magnitude and direction (e.g., force, velocity)." },
+  { q: "93. Add 4 N east and 3 N north vectors.", a: "Resultant = √(4²+3²)=5 N at angle tan⁻¹(3/4)." },
+  { q: "94. Define gravitational field.", a: "Region where a mass experiences gravitational force." },
+  { q: "95. State Newton’s Law of Gravitation.", a: "F = Gm₁m₂/r²." },
+  { q: "96. Define escape velocity.", a: "Minimum velocity needed to escape Earth’s gravitational field." },
+  { q: "97. Escape velocity on Earth (g=9.8, R=6400 km).", a: "v=√(2gR)=≈11.2 km/s." },
+  { q: "98. Define satellite.", a: "A body that orbits a planet under gravitational force." },
+  { q: "99. Define geostationary satellite.", a: "Satellite with 24-hr period, appearing fixed above one point on Earth." },
+  { q: "100. Give two uses of geostationary satellites.", a: "Telecommunication and weather monitoring." }
+
+
+  // ... (remaining questions up to 100, same as dataset I gave before)
+  
+
+];
+
+const container = document.getElementById("questionBank");
+
+questions.forEach(item => {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <div class="question">${item.q}</div>
+    <button onclick="toggleAnswer(this)">Show Answer</button>
+    <div class="answer">${item.a}</div>
+  `;
+  container.appendChild(card);
+});
+
+function toggleAnswer(btn) {
+  const answer = btn.nextElementSibling;
+  if (answer.style.display === "block") {
+    answer.style.display = "none";
+    btn.textContent = "Show Answer";
+  } else {
+    answer.style.display = "block";
+    btn.textContent = "Hide Answer";
+  }
+}
+</script>
+</body>
+</html>

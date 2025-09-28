@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnHub — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body { font-family:'Poppins',sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background: linear-gradient(135deg,#0ea5e9,#8b5cf6); margin:0; }
+.auth-card { background:#fff; padding:30px; border-radius:20px; width:380px; box-shadow:0 15px 35px rgba(0,0,0,0.2); text-align:center; }
+input, select { width:100%; padding:12px; margin:10px 0; border-radius:50px; border:1px solid #ccc; }
+button { padding:12px; width:100%; border:none; border-radius:50px; background:#0ea5e9; color:#fff; font-weight:600; cursor:pointer; margin-top:10px; }
+button:hover { background:#38bdf8; }
+.links { margin-top:10px; font-size:0.9rem; }
+</style>
+</head>
+<body>
+
+<div class="auth-card">
+  <h2>LearnHub Login / Signup</h2>
+
+  <!-- User Type -->
+  <select id="userType">
+    <option value="student">Student</option>
+    <option value="admin">Admin</option>
+  </select>
+
+  <!-- Email & Password -->
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <input type="text" id="name" placeholder="Full Name (for signup)">
+  
+  <button id="signupBtn">Sign Up</button>
+  <button id="loginBtn">Login</button>
+
+  <div class="links">Use admin@example.com / admin123 for admin login</div>
+</div>
+
+<script>
+// ===== Login / Signup =====
+const signupBtn = document.getElementById('signupBtn');
+const loginBtn = document.getElementById('loginBtn');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const nameInput = document.getElementById('name');
+const userTypeSelect = document.getElementById('userType');
+
+signupBtn.addEventListener('click', ()=>{
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  const name = nameInput.value.trim();
+  const type = userTypeSelect.value;
+  if(!email||!password||!name) return alert('Fill all fields');
+  
+  // Save user in localStorage
+  localStorage.setItem('user_'+email, JSON.stringify({name, password, type}));
+  localStorage.setItem('currentUser', email);
+  
+  alert('Signup successful!');
+  if(type==='admin') window.location.href='admin.html';
+  else window.location.href='student.html';
+});
+
+loginBtn.addEventListener('click', ()=>{
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  if(!email||!password) return alert('Fill email and password');
+
+  const user = JSON.parse(localStorage.getItem('user_'+email));
+  if(!user) return alert('User not found');
+  if(user.password!==password) return alert('Wrong password');
+
+  localStorage.setItem('currentUser', email);
+  if(user.type==='admin') window.location.href='admin.html';
+  else window.location.href='student.html';
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Student Messages</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body{
+  font-family:'Poppins',sans-serif;
+  background: linear-gradient(135deg,#0ea5e9,#1e293b);
+  color:#fff;
+  margin:0;
+  padding:20px;
+}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+header h1{font-size:1.8rem;color:#38bdf8;}
+.container{
+  display:flex;
+  gap:20px;
+  max-width:1000px;
+  margin:0 auto;
+}
+.students-list{
+  width:250px;
+  background:rgba(0,0,0,0.3);
+  padding:15px;
+  border-radius:12px;
+  max-height:500px;
+  overflow:auto;
+}
+.students-list h2{margin-bottom:12px;color:#0ea5e9;}
+.students-list li{
+  list-style:none;
+  padding:10px;
+  margin-bottom:8px;
+  background:rgba(255,255,255,0.1);
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.3s;
+}
+.students-list li:hover{background:rgba(255,255,255,0.2);}
+.chat-area{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.chat-header{
+  font-size:1.2rem;
+  margin-bottom:12px;
+  font-weight:600;
+}
+.messages{
+  flex:1;
+  overflow-y:auto;
+  background:rgba(0,0,0,0.25);
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+}
+.msg{
+  padding:10px 15px;
+  border-radius:10px;
+  margin-bottom:12px;
+  max-width:70%;
+  clear:both;
+}
+.msg.admin{
+  background:#0ea5e9;
+  float:left;
+}
+.msg.student{
+  background:#22c55e;
+  float:right;
+}
+.msg small{
+  display:block;
+  font-size:0.75rem;
+  margin-top:4px;
+  color:#e2e8f0;
+}
+.input-area{
+  display:flex;
+  gap:10px;
+}
+.input-area input{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  font-size:1rem;
+  outline:none;
+}
+.input-area button{
+  padding:12px 20px;
+  border:none;
+  border-radius:8px;
+  background:#0ea5e9;
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.input-area button:hover{background:#38bdf8;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Admin - Student Messages</h1>
+  <a href="admin-dashboard.html" style="color:#fff;text-decoration:none;font-weight:600;">← Dashboard</a>
+</header>
+
+<div class="container">
+  <div class="students-list">
+    <h2>Students</h2>
+    <ul id="students"></ul>
+  </div>
+  <div class="chat-area">
+    <div class="chat-header" id="chatHeader">Select a student to start chat</div>
+    <div class="messages" id="messages"></div>
+    <div class="input-area" id="inputArea" style="display:none;">
+      <input type="text" id="messageInput" placeholder="Write a message...">
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Example students (replace with real signup data)
+let allStudents = JSON.parse(localStorage.getItem("allStudents")) || ["student1@example.com","student2@example.com"];
+
+let currentStudent = null;
+let messages = [];
+
+const studentsList = document.getElementById('students');
+const messagesContainer = document.getElementById('messages');
+const inputArea = document.getElementById('inputArea');
+const chatHeader = document.getElementById('chatHeader');
+const input = document.getElementById('messageInput');
+
+// Load student list
+function loadStudents(){
+  studentsList.innerHTML='';
+  allStudents.forEach(s=>{
+    const li = document.createElement('li');
+    li.textContent = s;
+    li.onclick = ()=>openChat(s);
+    studentsList.appendChild(li);
+  });
+}
+
+// Open chat with student
+function openChat(student){
+  currentStudent = student;
+  chatHeader.textContent = "Chat with " + student;
+  inputArea.style.display = "flex";
+  messages = JSON.parse(localStorage.getItem("messages_" + student)) || [];
+  renderMessages();
+}
+
+// Render messages
+function renderMessages(){
+  messagesContainer.innerHTML='';
+  messages.forEach(m=>{
+    const div = document.createElement('div');
+    div.classList.add('msg', m.from === "Admin" ? "admin" : "student");
+    div.innerHTML = `<p>${m.text}</p><small>${m.from} • ${new Date(m.ts).toLocaleString()}</small>`;
+    messagesContainer.appendChild(div);
+  });
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Send message as Admin
+document.getElementById('sendBtn').addEventListener('click', ()=>{
+  sendMessage("Admin");
+});
+
+// Function to send message
+function sendMessage(sender){
+  if(!currentStudent) return;
+  const text = input.value.trim();
+  if(!text) return;
+  const msg = {from: sender, text, ts: Date.now()};
+  messages.push(msg);
+  localStorage.setItem("messages_" + currentStudent, JSON.stringify(messages));
+  input.value='';
+  renderMessages();
+}
+
+// Simulate Student Reply
+function studentReply(student, text){
+  let msgs = JSON.parse(localStorage.getItem("messages_" + student)) || [];
+  msgs.push({from:"Student", text, ts:Date.now()});
+  localStorage.setItem("messages_" + student, JSON.stringify(msgs));
+  if(currentStudent===student){
+    messages = msgs;
+    renderMessages();
+  }
+}
+
+// Example: simulate a student sending a message after 5 sec
+setInterval(()=>{
+  if(currentStudent){
+    studentReply(currentStudent, "Hello Admin, I have a question!");
+  }
+}, 30000);
+
+loadStudents();
+</script>
+
+</body>
+</html>

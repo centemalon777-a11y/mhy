@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LearnHub — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#0ea5e9; --bg2:#1e293b;
+  --card:#0f172a; --accent:#0ea5e9; --accent-2:#38bdf8;
+  --muted:#cbd5e1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Poppins',sans-serif;
+  background: linear-gradient(135deg,var(--bg1),#8b5cf6);
+  color:#fff;
+  padding:18px;
+}
+.wrapper{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:20px;}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.brand h1{font-size:1.3rem;color:#fff}
+.card{background:rgba(15,23,42,0.9);border-radius:14px;padding:18px;box-shadow:0 12px 30px rgba(2,6,23,0.45);}
+.profile-top{display:flex;gap:16px;align-items:center}
+.avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.4rem;color:#062026}
+.profile-info h2{font-size:1.1rem;margin-bottom:6px}
+.profile-info p{color:var(--muted);font-size:0.9rem;margin-bottom:8px}
+.button{padding:10px 12px;border-radius:10px;border:none;background:var(--accent);color:#012;cursor:pointer;font-weight:600}
+.button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);color:#fff}
+.leaderboard-list{display:flex;flex-direction:column;gap:8px}
+.leader {display:flex;justify-content:space-between;padding:8px;border-radius:8px;background:#07102288}
+.forum-list{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow:auto;padding-right:6px}
+.post{background:#06111a;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+.post-meta{font-size:0.8rem;color:var(--muted);margin-bottom:6px}
+.toggle{padding:8px;border-radius:10px;background:rgba(255,255,255,0.08);cursor:pointer}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="brand">
+    <h1>LearnHub — Student Dashboard</h1>
+  </div>
+  <div class="controls">
+    <div class="toggle" id="themeToggle">Toggle Theme</div>
+  </div>
+</div>
+
+<div class="wrapper">
+  <!-- LEFT COLUMN -->
+  <div>
+    <!-- Profile -->
+    <div class="card">
+      <div class="profile-top">
+        <div class="avatar" id="avatar">JD</div>
+        <div class="profile-info">
+          <h2 id="profileName">John Doe</h2>
+          <p id="profileEmail">john@example.com</p>
+          <div style="display:flex;gap:8px">
+            <button class="button" id="editProfileBtn">Edit Profile</button>
+            <button class="button ghost" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="card" style="margin-top:16px">
+      <h3>Leaderboard</h3>
+      <div class="leaderboard-list" id="leaderboardList"></div>
+      <div style="margin-top:10px;color:var(--muted);font-size:0.9rem">Top students by total score</div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div>
+    <!-- Forum -->
+    <div class="card">
+      <h3>Discussion Forum</h3>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input id="postInput" placeholder="Ask a question..." style="flex:1;border-radius:10px;padding:8px;border:1px solid rgba(255,255,255,0.05);background:transparent;color:#fff">
+        <button class="button" id="postBtn">Post</button>
+      </div>
+      <div class="forum-list" id="forumList"></div>
+    </div>
+
+    <!-- Calculator Shortcut -->
+    <div class="card" style="margin-top:16px">
+      <h3>Tools</h3>
+      <button class="button" id="openCalculator">Open Calculator</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== User Profile =====
+const currentUser = localStorage.getItem('currentUser');
+const displayName = localStorage.getItem('user_' + currentUser) || currentUser;
+document.getElementById('profileName').textContent = displayName;
+document.getElementById('profileEmail').textContent = currentUser;
+document.getElementById('avatar').textContent = displayName[0].toUpperCase();
+
+document.getElementById('editProfileBtn').addEventListener('click', ()=>{
+  const newName = prompt('Enter new display name:', displayName);
+  if(newName){
+    localStorage.setItem('user_' + currentUser, newName);
+    location.reload();
+  }
+});
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  localStorage.removeItem('currentUser');
+  window.location.href = 'login.html';
+});
+
+// ===== Leaderboard =====
+const leaderboardList = document.getElementById('leaderboardList');
+function renderLeaderboard(){
+  const lb = JSON.parse(localStorage.getItem('leaderboard')||'{}');
+  if(!lb[currentUser]) lb[currentUser] = {name:displayName,score:0};
+  const arr = Object.keys(lb).map(k=>({name:lb[k].name,score:lb[k].score||0})).sort((a,b)=>b.score-a.score);
+  leaderboardList.innerHTML = '';
+  arr.slice(0,5).forEach((u,i)=>{
+    const el = document.createElement('div'); el.className='leader';
+    el.innerHTML = `<div>${i+1}. ${u.name}</div><div>${u.score}</div>`;
+    leaderboardList.appendChild(el);
+  });
+}
+renderLeaderboard();
+
+// ===== Forum =====
+const forumList = document.getElementById('forumList');
+const postInput = document.getElementById('postInput');
+const postBtn = document.getElementById('postBtn');
+
+function loadForum(){
+  const posts = JSON.parse(localStorage.getItem('forum_posts')||'[]');
+  forumList.innerHTML = '';
+  posts.slice().reverse().forEach(p=>{
+    const div = document.createElement('div'); div.className='post';
+    div.innerHTML = `<div class="post-meta">${p.author} • ${new Date(p.ts).toLocaleString()}</div><div>${p.text}</div>`;
+    forumList.appendChild(div);
+  });
+}
+loadForum();
+
+postBtn.addEventListener('click', ()=>{
+  const text = postInput.value.trim();
+  if(!text) return;
+  const posts = JSON.parse(localStorage.getItem('forum_posts')||'[]');
+  posts.push({author: displayName, text, ts: Date.now()});
+  localStorage.setItem('forum_posts', JSON.stringify(posts));
+  postInput.value = '';
+  loadForum();
+});
+
+// ===== Calculator =====
+document.getElementById('openCalculator').addEventListener('click', ()=>{
+  window.open('sss.html','_blank');
+});
+
+// ===== Theme Toggle =====
+const themeToggle = document.getElementById('themeToggle');
+let dark = localStorage.getItem('theme') === 'dark';
+function applyTheme(){
+  if(dark){
+    document.body.style.background = 'linear-gradient(135deg,#061022,#071329)';
+  } else {
+    document.body.style.background = 'linear-gradient(135deg,#0ea5e9,#8b5cf6)';
+  }
+}
+applyTheme();
+themeToggle.addEventListener('click', ()=>{
+  dark=!dark; localStorage.setItem('theme',dark?'dark':'light'); applyTheme();
+});
+</script>
+</body>
+</html>

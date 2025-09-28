@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Messages - LearnHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg,#0ea5e9,#1e293b);
+      color:#fff;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    header{
+      background:rgba(0,0,0,0.4);
+      padding:15px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    header h1{font-size:1.3rem}
+    header a{
+      text-decoration:none;
+      color:#fff;
+      font-weight:600;
+      transition:0.3s;
+    }
+    header a:hover{color:#38bdf8}
+    .container{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      padding:20px;
+    }
+    .welcome-message{
+      font-size:1.1rem;
+      margin-bottom:15px;
+      color:#ffd700;
+      font-weight:600;
+    }
+    .messages{
+      flex:1;
+      overflow-y:auto;
+      background:rgba(0,0,0,0.25);
+      border-radius:12px;
+      padding:15px;
+      margin-bottom:15px;
+    }
+    .msg{
+      padding:10px 15px;
+      border-radius:10px;
+      margin-bottom:12px;
+      max-width:70%;
+      clear:both;
+    }
+    .msg.admin{
+      background:#0ea5e9;
+      float:left;
+      text-align:left;
+    }
+    .msg.student{
+      background:#22c55e;
+      float:right;
+      text-align:right;
+    }
+    .msg small{
+      display:block;
+      font-size:0.75rem;
+      margin-top:4px;
+      color:#e2e8f0;
+    }
+    .input-area{
+      display:flex;
+      gap:10px;
+    }
+    .input-area input{
+      flex:1;
+      padding:12px;
+      border:none;
+      border-radius:8px;
+      font-size:1rem;
+      outline:none;
+    }
+    .input-area button{
+      padding:12px 20px;
+      border:none;
+      border-radius:8px;
+      background:#0ea5e9;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+    }
+    .input-area button:hover{background:#38bdf8}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📩 Student Messages</h1>
+    <a href="dddeee.html">⬅ Back to Dashboard</a>
+  </header>
+
+  <div class="container">
+    <div class="welcome-message" id="welcomeMessage"></div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="input-area">
+      <input type="text" id="messageInput" placeholder="Write a reply...">
+      <button onclick="sendReply()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Simulated logged in user
+    const username = localStorage.getItem("loggedInUser") || "student1";
+
+    document.getElementById("welcomeMessage").textContent = 
+      `👋 Welcome, ${username}! Here are your messages with the admin.`; 
+
+    const messagesContainer = document.getElementById("messages");
+    const input = document.getElementById("messageInput");
+
+    // Load existing messages
+    let messages = JSON.parse(localStorage.getItem("messages_" + username)) || [];
+
+    function renderMessages() {
+      messagesContainer.innerHTML = "";
+      messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.classList.add("msg", msg.from === "Admin" ? "admin" : "student");
+        div.innerHTML = `<p>${msg.text}</p><small>${msg.from} • ${msg.time}</small>`;
+        messagesContainer.appendChild(div);
+      });
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function sendReply() {
+      const text = input.value.trim();
+      if (!text) return;
+      const msg = {
+        from: username,
+        text,
+        time: new Date().toLocaleString()
+      };
+      messages.push(msg);
+      localStorage.setItem("messages_" + username, JSON.stringify(messages));
+      input.value = "";
+      renderMessages();
+    }
+
+    renderMessages();
+  </script>
+</body>
+</html>

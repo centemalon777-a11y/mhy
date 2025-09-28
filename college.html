@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career & University Guidance</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: rgba(0,0,0,0.7);
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+    .container {
+      max-width: 950px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    h2 {
+      color: #0ea5e9;
+      margin-bottom: 10px;
+    }
+    label {
+      font-weight: 600;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: #0ea5e9;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #38bdf8;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+    ul {
+      margin-top: 6px;
+      padding-left: 20px;
+    }
+    .section {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Career & University Guidance (Nigeria)</h1>
+  </header>
+
+  <div class="container">
+    <h2>Choose Your Interest Area</h2>
+    <label for="interest">Select Field of Study:</label>
+    <select id="interest">
+      <option value="">-- Select --</option>
+      <option value="science">Science & Technology</option>
+      <option value="arts">Arts & Humanities</option>
+      <option value="commerce">Commerce & Business</option>
+      <option value="health">Health & Medicine</option>
+      <option value="law">Law & Social Sciences</option>
+    </select>
+    <button onclick="showCourses()">Show Courses</button>
+
+    <div class="result" id="courseResult"></div>
+  </div>
+
+  <script>
+    function showCourses() {
+      let interest = document.getElementById("interest").value;
+      let resultDiv = document.getElementById("courseResult");
+      let output = "";
+
+      if (interest === "science") {
+        output = `
+          <div class="section"><b>Science & Technology Courses:</b>
+            <ul>
+              <li>Computer Science</li>
+              <li>Mechanical Engineering</li>
+              <li>Civil Engineering</li>
+              <li>Architecture</li>
+              <li>Information Technology</li>
+            </ul>
+          </div>
+          <div class="section"><b>Examples of Universities:</b>
+            <ul>
+              <li><b>Federal:</b> UNILAG, FUTA, UNIBEN</li>
+              <li><b>State:</b> LASU, OOU, EKSU</li>
+              <li><b>Private:</b> Covenant University, Babcock University</li>
+            </ul>
+          </div>
+          <div class="section"><b>WAEC Subjects:</b>
+            <ul>
+              <li>Mathematics</li>
+              <li>English Language</li>
+              <li>Physics</li>
+              <li>Chemistry</li>
+              <li>Further Mathematics (advantage)</li>
+            </ul>
+          </div>
+          <div class="section"><b>JAMB Subjects:</b>
+            <ul>
+              <li>Use of English</li>
+              <li>Mathematics</li>
+              <li>Physics</li>
+              <li>Chemistry</li>
+            </ul>
+          </div>
+        `;
+      } else if (interest === "arts") {
+        output = `
+          <div class="section"><b>Arts & Humanities Courses:</b>
+            <ul>
+              <li>English Language</li>
+              <li>History & International Studies</li>
+              <li>Theatre Arts</li>
+              <li>Philosophy</li>
+              <li>Mass Communication</li>
+            </ul>
+          </div>
+          <div class="section"><b>Examples of Universities:</b>
+            <ul>
+              <li><b>Federal:</b> UNN, OAU, UNILORIN</li>
+              <li><b>State:</b> LASU, ABSU, AAUA</li>
+              <li><b>Private:</b> Babcock University, Afe Babalola University</li>
+            </ul>
+          </div>
+          <div class="section"><b>WAEC Subjects:</b>
+            <ul>
+              <li>English Language</li>
+              <li>Literature in English</li>
+              <li>Government / History</li>
+              <li>Christian Religious Studies / Islamic Studies</li>
+              <li>Any other Arts subject</li>
+            </ul>
+          </div>
+          <div class="section"><b>JAMB Subjects:</b>
+            <ul>
+              <li>Use of English</li>
+              <li>Literature in English</li>
+              <li>Government / History</li>
+              <li>CRS/IRS or any other Arts subject</li>
+            </ul>
+          </div>
+        `;
+      } else if (interest === "commerce") {
+        output = `
+          <div class="section"><b>Commerce & Business Courses:</b>
+            <ul>
+              <li>Accounting</li>
+              <li>Banking & Finance</li>
+              <li>Business Administration</li>
+              <li>Economics</li>
+              <li>Marketing</li>
+            </ul>
+          </div>
+          <div class="section"><b>Examples of Universities:</b>
+            <ul>
+              <li><b>Federal:</b> UNILAG, UNIBEN, ABU Zaria</li>
+              <li><b>State:</b> LASU, DELSU, UNIOSUN</li>
+              <li><b>Private:</b> Covenant University, Babcock University</li>
+            </ul>
+          </div>
+          <div class="section"><b>WAEC Subjects:</b>
+            <ul>
+              <li>Mathematics</li>
+              <li>English Language</li>
+              <li>Economics</li>
+              <li>Commerce</li>
+              <li>Accounting / Government</li>
+            </ul>
+          </div>
+          <div class="section"><b>JAMB Subjects:</b>
+            <ul>
+              <li>Use of English</li>
+              <li>Mathematics</li>
+              <li>Economics</li>
+              <li>Accounting / Commerce</li>
+            </ul>
+          </div>
+        `;
+      } else if (interest === "health") {
+        output = `
+          <div class="section"><b>Health & Medicine Courses:</b>
+            <ul>
+              <li>Medicine & Surgery</li>
+              <li>Nursing Science</li>
+              <li>Pharmacy</li>
+              <li>Medical Laboratory Science</li>
+              <li>Public Health</li>
+            </ul>
+          </div>
+          <div class="section"><b>Examples of Universities:</b>
+            <ul>
+              <li><b>Federal:</b> UNILAG, UI, UNN</li>
+              <li><b>State:</b> LASU, AAU, IMSU</li>
+              <li><b>Private:</b> Babcock University, Bowen University</li>
+            </ul>
+          </div>
+          <div class="section"><b>WAEC Subjects:</b>
+            <ul>
+              <li>Mathematics</li>
+              <li>English Language</li>
+              <li>Biology</li>
+              <li>Chemistry</li>
+              <li>Physics</li>
+            </ul>
+          </div>
+          <div class="section"><b>JAMB Subjects:</b>
+            <ul>
+              <li>Use of English</li>
+              <li>Biology</li>
+              <li>Chemistry</li>
+              <li>Physics</li>
+            </ul>
+          </div>
+        `;
+      } else if (interest === "law") {
+        output = `
+          <div class="section"><b>Law & Social Science Courses:</b>
+            <ul>
+              <li>Law</li>
+              <li>Political Science</li>
+              <li>Sociology</li>
+              <li>International Relations</li>
+            </ul>
+          </div>
+          <div class="section"><b>Examples of Universities:</b>
+            <ul>
+              <li><b>Federal:</b> UNILAG, ABU Zaria, UNN</li>
+              <li><b>State:</b> LASU, AAU, IMSU</li>
+              <li><b>Private:</b> Afe Babalola University, Babcock University</li>
+            </ul>
+          </div>
+          <div class="section"><b>WAEC Subjects:</b>
+            <ul>
+              <li>English Language</li>
+              <li>Literature in English</li>
+              <li>Government / CRS</li>
+              <li>Mathematics</li>
+              <li>Any other Arts or Social Science subject</li>
+            </ul>
+          </div>
+          <div class="section"><b>JAMB Subjects:</b>
+            <ul>
+              <li>Use of English</li>
+              <li>Literature in English</li>
+              <li>Government / CRS</li>
+              <li>Any other Arts or Social Science subject</li>
+            </ul>
+          </div>
+        `;
+      } else {
+        output = "⚠️ Please select a field of study to see available courses.";
+      }
+
+      resultDiv.innerHTML = output;
+    }
+  </script>
+</body>
+</html>
+

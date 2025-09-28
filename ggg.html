@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - LearnHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family:'Poppins',sans-serif;
+  margin:0;
+  background: linear-gradient(135deg,#0ea5e9,#8b5cf6);
+  color:#fff;
+}
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px;
+  background:rgba(0,0,0,0.4);
+}
+header h1 {color:#38bdf8;}
+header button {padding:10px 15px; border:none; border-radius:8px; background:#ef4444; cursor:pointer;}
+nav {
+  display:flex;
+  justify-content:center;
+  background:rgba(0,0,0,0.3);
+}
+nav button {
+  background:transparent;
+  border:none;
+  color:#fff;
+  padding:12px 20px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+}
+nav button.active, nav button:hover {background:rgba(0,0,0,0.5); border-radius:8px;}
+.container {max-width:1100px;margin:20px auto;padding:0 15px;}
+.section {display:none;}
+.section.active {display:block;}
+.card {background:rgba(0,0,0,0.25);padding:20px;border-radius:12px;margin-bottom:20px;}
+ul {list-style:none;padding:0;}
+li {padding:10px;margin-bottom:8px;background:rgba(255,255,255,0.1);border-radius:8px;}
+li:hover {background:rgba(255,255,255,0.2);}
+.input-area{display:flex;gap:10px;margin-top:10px;}
+.input-area input{flex:1;padding:10px;border-radius:8px;border:none;}
+.input-area button{padding:10px 15px;border:none;border-radius:8px;background:#0ea5e9;color:#fff;cursor:pointer;}
+.input-area button:hover{background:#38bdf8;}
+.btn-nav {margin:10px 5px;padding:8px 12px;border:none;border-radius:6px;background:#22c55e;color:#fff;cursor:pointer;}
+.btn-nav:hover {background:#38bdf8;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Admin Dashboard</h1>
+  <button id="logoutBtn">Logout</button>
+</header>
+<a href="fdeee.html"><button class="btn-nav">Message each students</button></a>
+<a href="ewq.html"><button class="btn-nav">All students registration</button></a>
+
+
+<script>
+
+// ===== Logout =====
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  localStorage.removeItem('currentAdmin');
+  window.location.href='alogin.html';
+});
+
+
+</script>
+
+</body>
+</html>

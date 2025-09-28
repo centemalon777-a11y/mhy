@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scientific Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: 'Poppins', sans-serif;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg, #0ea5e9, #3f88aa);
+}
+.calculator-card {
+    background:#fff;
+    width:380px;
+    border-radius:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+    overflow:hidden;
+    text-align:center;
+    padding:20px;
+}
+.calculator-display {
+    width:100%;
+    padding:15px;
+    font-size:1.5rem;
+    border-radius:50px;
+    border:1px solid #ccc;
+    outline:none;
+    margin-bottom:20px;
+    text-align:right;
+    transition:0.3s;
+}
+.calculator-display:focus {
+    border-color:#0ea5e9;
+    box-shadow:0 0 10px rgba(14,165,233,0.3);
+}
+.button-grid {
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+}
+button {
+    padding:15px;
+    border:none;
+    border-radius:50px;
+    background:#0ea5e9;
+    color:#fff;
+    font-weight:600;
+    font-size:1rem;
+    cursor:pointer;
+    transition:0.3s;
+}
+button:hover { background:#38bdf8; }
+button.operator { background:#2563eb; }
+button.operator:hover { background:#3b82f6; }
+button.equals { background:#10b981; }
+button.equals:hover { background:#34d399; }
+button.clear { background:#ef4444; }
+button.clear:hover { background:#f87171; }
+button.scientific { background:#f59e0b; }
+button.scientific:hover { background:#fbbf24; }
+@media(max-width:400px){ .calculator-card { width:90%; } }
+</style>
+</head>
+<body>
+
+<div class="calculator-card">
+    <h2 style="color:#0ea5e9; margin-bottom:15px;">Scientific Calculator</h2>
+    <input type="text" id="display" class="calculator-display" disabled>
+    <div class="button-grid">
+        <button class="clear" onclick="allClear()">AC</button>
+        <button class="clear" onclick="clearLast()">C</button>
+        <button class="scientific" onclick="appendValue('sin(')">sin</button>
+        <button class="scientific" onclick="appendValue('cos(')">cos</button>
+        <button class="scientific" onclick="appendValue('tan(')">tan</button>
+
+        <button class="scientific" onclick="appendValue('log(')">log</button>
+        <button class="scientific" onclick="appendValue('ln(')">ln</button>
+        <button onclick="appendValue('(')">(</button>
+        <button onclick="appendValue(')')">)</button>
+        <button onclick="appendValue('^')">^</button>
+
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button class="operator" onclick="appendValue('/')">/</button>
+        <button class="scientific" onclick="appendValue('sqrt(')">√</button>
+
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button class="operator" onclick="appendValue('*')">*</button>
+        <button onclick="appendValue('%')">%</button>
+
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button class="operator" onclick="appendValue('-')">-</button>
+        <button onclick="appendValue('Math.PI')">π</button>
+
+        <button onclick="appendValue('0')" style="grid-column: span 2;">0</button>
+        <button onclick="appendValue('.')">.</button>
+        <button class="operator" onclick="appendValue('+')">+</button>
+        <button class="equals" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+const display = document.getElementById('display');
+
+function appendValue(val){
+    display.value += val;
+}
+
+function clearLast(){
+    display.value = display.value.slice(0,-1);
+}
+
+function allClear(){
+    display.value = '';
+}
+
+function calculate(){
+    try{
+        let exp = display.value;
+        exp = exp.replace(/\^/g,'**');
+        exp = exp.replace(/sin\(/g,'Math.sin(');
+        exp = exp.replace(/cos\(/g,'Math.cos(');
+        exp = exp.replace(/tan\(/g,'Math.tan(');
+        exp = exp.replace(/log\(/g,'Math.log10(');
+        exp = exp.replace(/ln\(/g,'Math.log(');
+        exp = exp.replace(/sqrt\(/g,'Math.sqrt(');
+
+        // Convert degrees to radians for trig
+        exp = exp.replace(/Math\.sin\(([^)]+)\)/g,'Math.sin(($1)*Math.PI/180)');
+        exp = exp.replace(/Math\.cos\(([^)]+)\)/g,'Math.cos(($1)*Math.PI/180)');
+        exp = exp.replace(/Math\.tan\(([^)]+)\)/g,'Math.tan(($1)*Math.PI/180)');
+
+        const result = eval(exp);
+        display.value = result;
+    } catch(e){
+        alert('Invalid expression');
+        display.value = '';
+    }
+}
+</script>
+
+</body>
+</html>

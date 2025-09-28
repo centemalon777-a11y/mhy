@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SS1 Physics Quiz</title>
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg,#0f766e,#0891b2,#38bdf8);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+.quiz-container {
+  background: rgba(0,0,0,0.7);
+  padding: 25px;
+  border-radius: 14px;
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+.option-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  background: #0ea5e9;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.option-btn:hover { background: #38bdf8; }
+#next-btn {
+  display: none;
+  background: #22c55e;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+#timer {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 50:00</div>
+    <h2 id="question">Loading question...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+// ===== QUIZ DATA =====
+const quizData = [
+  {question: "1. What is the SI unit of force?", options: ["Newton", "Joule", "Pascal", "Watt"], answer: "Newton"},
+  {question: "2. Who formulated the laws of motion?", options: ["Newton", "Einstein", "Galileo", "Faraday"], answer: "Newton"},
+  {question: "3. The acceleration due to gravity on Earth is?", options: ["9.8 m/s²","10 m/s²","8 m/s²","12 m/s²"], answer: "9.8 m/s²"},
+  {question: "4. What is the formula for kinetic energy?", options: ["½mv²","mgh","F=ma","V=IR"], answer: "½mv²"},
+  {question: "5. Which law states energy cannot be created or destroyed?", options: ["Conservation of Energy","Ohm's Law","Hooke's Law","Boyle's Law"], answer: "Conservation of Energy"},
+  {question: "6. What is the SI unit of pressure?", options: ["Pascal","Newton","Watt","Joule"], answer: "Pascal"},
+  {question: "7. Which particle has negative charge?", options: ["Electron","Proton","Neutron","Photon"], answer: "Electron"},
+  {question: "8. The speed of light in vacuum is?", options: ["3x10^8 m/s","1.5x10^8 m/s","3x10^6 m/s","1x10^8 m/s"], answer: "3x10^8 m/s"},
+  {question: "9. Who discovered electromagnetic induction?", options: ["Faraday","Newton","Einstein","Bohr"], answer: "Faraday"},
+  {question: "10. What is the SI unit of current?", options: ["Ampere","Volt","Ohm","Coulomb"], answer: "Ampere"},
+  {question: "11. Which law relates voltage, current and resistance?", options: ["Ohm's Law","Newton's Law","Kepler's Law","Boyle's Law"], answer: "Ohm's Law"},
+  {question: "12. What is the SI unit of power?", options: ["Watt","Joule","Newton","Ampere"], answer: "Watt"},
+  {question: "13. What is the main gas in Earth's atmosphere?", options: ["Nitrogen","Oxygen","Carbon dioxide","Hydrogen"], answer: "Nitrogen"},
+  {question: "14. Which color of light has shortest wavelength?", options: ["Violet","Red","Green","Yellow"], answer: "Violet"},
+  {question: "15. Formula for pressure?", options: ["Force/Area","Mass/Volume","Work/Time","Energy/Charge"], answer: "Force/Area"},
+  {question: "16. Formula for density?", options: ["Mass/Volume","Force/Area","Work/Time","Energy/Charge"], answer: "Mass/Volume"},
+  {question: "17. Who proposed theory of relativity?", options: ["Einstein","Newton","Faraday","Bohr"], answer: "Einstein"},
+  {question: "18. SI unit of temperature?", options: ["Kelvin","Celsius","Fahrenheit","Joule"], answer: "Kelvin"},
+  {question: "19. Which law explains why ships float?", options: ["Archimedes Principle","Boyle Law","Newton Law","Ohm Law"], answer: "Archimedes Principle"},
+  {question: "20. What is potential energy formula?", options: ["mgh","½mv²","V=IR","F=ma"], answer: "mgh"},
+  {question: "21. Formula for work done?", options: ["Force x Distance","Mass x Acceleration","½mv²","V=IR"], answer: "Force x Distance"},
+  {question: "22. Which lens converges light rays?", options: ["Convex","Concave","Flat","Cylindrical"], answer: "Convex"},
+  {question: "23. SI unit of charge?", options: ["Coulomb","Ampere","Volt","Ohm"], answer: "Coulomb"},
+  {question: "24. Acceleration due to gravity on Moon?", options: ["1.6 m/s²","9.8 m/s²","3.7 m/s²","0.98 m/s²"], answer: "1.6 m/s²"},
+  {question: "25. Work-energy theorem states?", options: ["Work done = change in kinetic energy","Energy is created","Force is velocity","Power = work/time"], answer: "Work done = change in kinetic energy"},
+  {question: "26. Formula for momentum?", options: ["Mass x Velocity","Force x Distance","Work/Time","Energy/Charge"], answer: "Mass x Velocity"},
+  {question: "27. Which law explains gas pressure?", options: ["Boyle's Law","Newton Law","Hooke Law","Ohm Law"], answer: "Boyle's Law"},
+  {question: "28. Unit of frequency?", options: ["Hertz","Newton","Joule","Watt"], answer: "Hertz"},
+  {question: "29. Which type of lens diverges light rays?", options: ["Concave","Convex","Flat","Cylindrical"], answer: "Concave"},
+  {question: "30. SI unit of energy?", options: ["Joule","Watt","Newton","Ampere"], answer: "Joule"},
+  {question: "31. Formula for Ohm's Law?", options: ["V=IR","F=ma","E=mc²","P=VI"], answer: "V=IR"},
+  {question: "32. Formula for gravitational force?", options: ["F=Gm1m2/r²","F=ma","E=mc²","V=IR"], answer: "F=Gm1m2/r²"},
+  {question: "33. Frequency formula?", options: ["1/period","V x I","mgh","F=ma"], answer: "1/period"},
+  {question: "34. Formula for work done?", options: ["Force x Distance","mgh","½mv²","V=IR"], answer: "Force x Distance"},
+  {question: "35. Who discovered laws of reflection?", options: ["Newton","Huygens","Snell","Einstein"], answer: "Snell"},
+  {question: "36. Who discovered laws of refraction?", options: ["Newton","Huygens","Snell","Einstein"], answer: "Snell"},
+  {question: "37. Unit of power?", options: ["Watt","Newton","Joule","Ampere"], answer: "Watt"},
+  {question: "38. Elastic limit is?", options: ["Max stress without permanent deformation","Max force","Min force","Stress=0"], answer: "Max stress without permanent deformation"},
+  {question: "39. Pressure formula?", options: ["Force/Area","Mass/Volume","Work/Time","Energy/Charge"], answer: "Force/Area"},
+  {question: "40. Speed formula?", options: ["Distance/Time","Time/Distance","Force/Time","Energy/Time"], answer: "Distance/Time"},
+  {question: "41. Velocity formula?", options: ["Displacement/Time","Distance/Time","Time/Displacement","Energy/Time"], answer: "Displacement/Time"},
+  {question: "42. Laws of motion first law?", options: ["Law of Inertia","F=ma","Action=Reaction","Hooke Law"], answer: "Law of Inertia"},
+  {question: "43. Laws of motion second law?", options: ["F=ma","Law of Inertia","Action=Reaction","Hooke Law"], answer: "F=ma"},
+  {question: "44. Laws of motion third law?", options: ["Action=Reaction","F=ma","Law of Inertia","Hooke Law"], answer: "Action=Reaction"},
+  {question: "45. Unit of voltage?", options: ["Volt","Watt","Ampere","Joule"], answer: "Volt"},
+  {question: "46. Which gas has highest thermal conductivity?", options: ["Helium","Air","Oxygen","Hydrogen"], answer: "Helium"},
+  {question: "47. What is the SI unit of density?", options: ["kg/m³","g/cm³","m³","kg"], answer: "kg/m³"},
+  {question: "48. Formula for pressure in liquid?", options: ["P=ρgh","F=ma","V=IR","E=mc²"], answer: "P=ρgh"},
+  {question: "49. What is the fundamental quantity in mechanics?", options: ["Mass","Force","Velocity","Work"], answer: "Mass"},
+  {question: "50. Who discovered photoelectric effect?", options: ["Einstein","Newton","Faraday","Bohr"], answer: "Einstein"}
+];
+
+// ===== VARIABLES =====
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 3000; // 50 min in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+// ===== START QUIZ =====
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if(student===""){ alert("Enter your name."); return; }
+  nameInput.style.display="none";
+  startBtn.style.display="none";
+  quizSection.style.display="block";
+  startTimer();
+  loadQuestion();
+});
+
+// ===== LOAD QUESTION =====
+function loadQuestion(){
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt=>{
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.className = "option-btn";
+    btn.onclick = ()=> selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+// ===== SELECT ANSWER =====
+function selectAnswer(selected){
+  let correct = quizData[currentQuestion].answer;
+  if(selected===correct) score++;
+  nextBtn.style.display="inline-block";
+  Array.from(optionsEl.children).forEach(btn=>{
+    btn.disabled=true;
+    if(btn.textContent===correct) btn.style.background="#22c55e";
+    else if(btn.textContent===selected) btn.style.background="#ef4444";
+  });
+}
+
+// ===== NEXT BUTTON =====
+nextBtn.addEventListener("click", ()=>{
+  currentQuestion++;
+  if(currentQuestion<quizData.length){
+    loadQuestion();
+    nextBtn.style.display="none";
+  } else endQuiz();
+});
+
+// ===== TIMER =====
+function startTimer(){
+  timer = setInterval(()=>{
+    timeLeft--;
+    let min = Math.floor(timeLeft/60);
+    let sec = timeLeft%60;
+    timerEl.textContent = `Time left: ${min}:${sec<10?'0':''}${sec}`;
+    if(timeLeft<=0){
+      clearInterval(timer);
+      endQuiz();
+    }
+  },1000);
+}
+
+// ===== END QUIZ =====
+function endQuiz(){
+  clearInterval(timer);
+  questionEl.textContent="Quiz Completed!";
+  optionsEl.innerHTML="";
+  nextBtn.style.display="none";
+  resultEl.textContent=`${student}, your Score: ${score} / 50`;
+  
+  // Save score in localStorage
+  let scores = JSON.parse(localStorage.getItem("quizScores")||'[]');
+  scores.push({name:student, score:score, date:new Date().toLocaleString()});
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+
+</script>
+</body>
+</html>

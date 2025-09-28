@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator - LearnHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body{
+  font-family:'Poppins',sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background: linear-gradient(135deg,#0ea5e9,#1e293b);
+  margin:0;
+}
+.calculator{
+  background: rgba(15,23,42,0.95);
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.4);
+  width:300px;
+}
+.display{
+  background:#0f172a;
+  color:#fff;
+  font-size:2rem;
+  text-align:right;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:15px;
+  min-height:50px;
+}
+.buttons{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+button{
+  padding:15px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  background: #0ea5e9;
+  color:#fff;
+  transition:0.2s;
+}
+button:hover{background:#38bdf8;}
+button.operator{background:#22c55e;}
+button.operator:hover{background:#16a34a;}
+</style>
+</head>
+<body>
+
+<div class="calculator">
+  <div class="display" id="display">0</div>
+  <div class="buttons">
+    <button onclick="press('7')">7</button>
+    <button onclick="press('8')">8</button>
+    <button onclick="press('9')">9</button>
+    <button class="operator" onclick="press('/')">/</button>
+
+    <button onclick="press('4')">4</button>
+    <button onclick="press('5')">5</button>
+    <button onclick="press('6')">6</button>
+    <button class="operator" onclick="press('*')">*</button>
+
+    <button onclick="press('1')">1</button>
+    <button onclick="press('2')">2</button>
+    <button onclick="press('3')">3</button>
+    <button class="operator" onclick="press('-')">-</button>
+
+    <button onclick="press('0')">0</button>
+    <button onclick="press('.')">.</button>
+    <button class="operator" onclick="calculate()">=</button>
+    <button class="operator" onclick="press('+')">+</button>
+
+    <button class="operator" style="grid-column: span 4;" onclick="clearDisplay()">C</button>
+  </div>
+</div>
+
+<script>
+let current = '';
+function press(num){
+  if(current==='0') current='';
+  current += num;
+  document.getElementById('display').textContent = current;
+}
+function calculate(){
+  try{
+    current = eval(current).toString();
+    document.getElementById('display').textContent = current;
+  }catch{
+    document.getElementById('display').textContent='Error';
+    current='';
+  }
+}
+function clearDisplay(){
+  current='';
+  document.getElementById('display').textContent='0';
+}
+</script>
+
+</body>
+</html>

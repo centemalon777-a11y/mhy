@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb, #3b82f6);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+const quizData = [
+  {
+    question: "What is the unit of magnetic field strength?",
+    options: ["Tesla", "Newton", "Joule", "Watt"],
+    answer: "Tesla"
+  },
+  {
+    question: "Which of the following materials is NOT magnetic?",
+    options: ["Iron", "Copper", "Nickel", "Cobalt"],
+    answer: "Copper"
+  },
+  {
+    question: "What is the phenomenon of inducing voltage in a conductor by changing the magnetic field around it called?",
+    options: ["Electromagnetic Induction", "Magnetic Flux", "Magnetization", "Magnetic Resonance"],
+    answer: "Electromagnetic Induction"
+  },
+  {
+    question: "Which law states that the induced electromotive force in any closed circuit is equal to the negative of the time rate of change of the magnetic flux through the circuit?",
+    options: ["Faraday's Law", "Ohm's Law", "Lenz's Law", "Coulomb's Law"],
+    answer: "Faraday's Law"
+  },
+  {
+    question: "What device is used to measure magnetic field strength?",
+    options: ["Galvanometer", "Ammeter", "Voltmeter", "Magnetometer"],
+    answer: "Magnetometer"
+  },
+  {
+    question: "What is the direction of the magnetic field around a current-carrying conductor?",
+    options: ["Circular around the conductor", "Straight along the conductor", "Perpendicular to the conductor", "Randomly oriented"],
+    answer: "Circular around the conductor"
+  },
+  {
+    question: "Which of these particles has a magnetic moment?",
+    options: ["Electron", "Proton", "Neutron", "All of the above"],
+    answer: "All of the above"
+  },
+  {
+    question: "What is the effect called when a magnetic field exerts a force on a moving charge?",
+    options: ["Lorentz Force", "Centripetal Force", "Gravitational Force", "Frictional Force"],
+    answer: "Lorentz Force"
+  },
+  {
+    question: "Which material is commonly used to make permanent magnets?",
+    options: ["Aluminum", "Steel", "Plastic", "Glass"],
+    answer: "Steel"
+  },
+
+  
+  {
+    question: "What is the SI unit of electric current?",
+    options: ["Ampere", "Volt", "Ohm", "Coulomb"],
+    answer: "Ampere"
+  },
+  {
+    question: "Which instrument is used to measure electric current?",
+    options: ["Ammeter", "Voltmeter", "Galvanometer", "Ohmmeter"],
+    answer: "Ammeter"
+  },
+  {
+    question: "What is the SI unit of electric charge?",
+    options: ["Coulomb", "Ampere", "Volt", "Ohm"],
+    answer: "Coulomb"
+  },
+  {
+    question: "Which particle is responsible for electric current in metals?",
+    options: ["Electron", "Proton", "Neutron", "Photon"],
+    answer: "Electron"
+  },
+  {
+    question: "What is the SI unit of potential difference?",
+    options: ["Volt", "Ampere", "Ohm", "Coulomb"],
+    answer: "Volt"
+  },
+  {
+    question: "Which instrument is used to measure potential difference?",
+    options: ["Voltmeter", "Ammeter", "Galvanometer", "Ohmmeter"],
+    answer: "Voltmeter"
+  },
+  {
+    question: "What is the SI unit of resistance?",
+    options: ["Ohm", "Volt", "Ampere", "Coulomb"],
+    answer: "Ohm"
+  },
+  {
+    question: "Which instrument is used to measure resistance?",
+    options: ["Ohmmeter", "Ammeter", "Voltmeter", "Galvanometer"],
+    answer: "Ohmmeter"
+  },
+  {
+    question: "What is Ohm's Law?",
+    options: [
+      "V = IR",
+      "I = VR",
+      "R = VI",
+      "V = I/R"
+    ],
+    answer: "V = IR"
+  },
+  {
+    question: "What is the resistance of a conductor if 2 A flows through it with 10 V applied?",
+    options: ["5 Ω", "20 Ω", "0.2 Ω", "12 Ω"],
+    answer: "5 Ω"
+  },
+  {
+    question: "Which of the following is a good conductor of electricity?",
+    options: ["Copper", "Glass", "Rubber", "Plastic"],
+    answer: "Copper"
+  },
+  {
+    question: "Which of the following is an insulator?",
+    options: ["Rubber", "Copper", "Aluminium", "Iron"],
+    answer: "Rubber"
+  },
+  {
+    question: "What is the charge on a proton?",
+    options: ["+1.6 x 10^-19 C", "-1.6 x 10^-19 C", "0", "+1 C"],
+    answer: "+1.6 x 10^-19 C"
+  },
+  {
+    question: "What is the charge on an electron?",
+    options: ["-1.6 x 10^-19 C", "+1.6 x 10^-19 C", "0", "-1 C"],
+    answer: "-1.6 x 10^-19 C"
+  },
+  {
+    question: "Which of the following is NOT a source of electricity?",
+    options: ["Magnet", "Battery", "Generator", "Solar cell"],
+    answer: "Magnet"
+  },
+  {
+    question: "What is the formula for electrical power?",
+    options: [
+      "P = VI",
+      "P = V/I",
+      "P = I/V",
+      "P = V + I"
+    ],
+    answer: "P = VI"
+  },
+  {
+    question: "What is the resistance of a 60 W, 240 V bulb?",
+    options: ["960 Ω", "4 Ω", "0.25 Ω", "14400 Ω"],
+    answer: "960 Ω"
+  },
+  {
+    question: "Which of the following is NOT a unit of electrical energy?",
+    options: ["Watt", "Joule", "Kilowatt-hour", "Calorie"],
+    answer: "Watt"
+  },
+  {
+    question: "Which of the following is NOT a type of electric circuit?",
+    options: ["Magnetic circuit", "Series circuit", "Parallel circuit", "Mixed circuit"],
+    answer: "Magnetic circuit"
+  },
+  {
+    question: "What happens to total resistance when resistors are connected in series?",
+    options: [
+      "It increases",
+      "It decreases",
+      "It remains the same",
+      "It becomes zero"
+    ],
+    answer: "It increases"
+  },
+  {
+    question: "What happens to total resistance when resistors are connected in parallel?",
+    options: [
+      "It decreases",
+      "It increases",
+      "It remains the same",
+      "It becomes infinite"
+    ],
+    answer: "It decreases"
+  },
+  {
+    question: "Which of the following is NOT a property of electric current?",
+    options: [
+      "It produces heat",
+      "It produces magnetic field",
+      "It produces sound",
+      "It can decompose water"
+    ],
+    answer: "It produces sound"
+  },
+  {
+    question: "Which device converts chemical energy to electrical energy?",
+    options: ["Battery", "Bulb", "Heater", "Fan"],
+    answer: "Battery"
+  },
+  {
+    question: "Which device converts electrical energy to light energy?",
+    options: ["Bulb", "Battery", "Cell", "Switch"],
+    answer: "Bulb"
+  },
+  {
+    question: "Which device converts electrical energy to heat energy?",
+    options: ["Heater", "Fan", "Battery", "Cell"],
+    answer: "Heater"
+  },
+  {
+    question: "Which device converts electrical energy to mechanical energy?",
+    options: ["Fan", "Bulb", "Battery", "Cell"],
+    answer: "Fan"
+  },
+  {
+    question: "What is the direction of conventional current?",
+    options: [
+      "From positive to negative",
+      "From negative to positive",
+      "Both directions",
+      "No direction"
+    ],
+    answer: "From positive to negative"
+  },
+  {
+    question: "What is the direction of electron flow in a circuit?",
+    options: [
+      "From negative to positive",
+      "From positive to negative",
+      "Both directions",
+      "No direction"
+    ],
+    answer: "From negative to positive"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting resistance?",
+    options: [
+      "Color of wire",
+      "Length of wire",
+      "Area of cross-section",
+      "Material of wire"
+    ],
+    answer: "Color of wire"
+  },
+  {
+    question: "Which of the following increases the resistance of a wire?",
+    options: [
+      "Increasing length",
+      "Increasing area",
+      "Using better conductor",
+      "Decreasing length"
+    ],
+    answer: "Increasing length"
+  },
+  {
+    question: "Which of the following decreases the resistance of a wire?",
+    options: [
+      "Increasing area",
+      "Increasing length",
+      "Using poor conductor",
+      "Decreasing area"
+    ],
+    answer: "Increasing area"
+  },
+  {
+    question: "Which of the following is NOT a safety device in electricity?",
+    options: ["Transformer", "Fuse", "Circuit breaker", "Earth wire"],
+    answer: "Transformer"
+  },
+  {
+    question: "Which of the following is used to protect appliances from excess current?",
+    options: ["Fuse", "Switch", "Bulb", "Battery"],
+    answer: "Fuse"
+  },
+  {
+    question: "Which of the following is used to break or complete a circuit?",
+    options: ["Switch", "Fuse", "Bulb", "Battery"],
+    answer: "Switch"
+  },
+  {
+    question: "Which of the following is NOT a renewable source of electricity?",
+    options: ["Coal", "Solar", "Wind", "Hydro"],
+    answer: "Coal"
+  },
+  {
+    question: "Which of the following is a renewable source of electricity?",
+    options: ["Solar", "Coal", "Petrol", "Diesel"],
+    answer: "Solar"
+  },
+  {
+    question: "What is the function of a transformer?",
+    options: [
+      "To increase or decrease voltage",
+      "To store charge",
+      "To measure current",
+      "To produce light"
+    ],
+    answer: "To increase or decrease voltage"
+  },
+  {
+    question: "Which of the following is NOT a type of transformer?",
+    options: [
+      "Step-up",
+      "Step-down",
+      "Step-across",
+      "Auto"
+    ],
+    answer: "Step-across"
+  },
+  {
+    question: "Which of the following is NOT a use of electricity?",
+    options: [
+      "Cooking",
+      "Lighting",
+      "Heating",
+      "Photosynthesis"
+    ],
+    answer: "Photosynthesis"
+  }
+];
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Magnetism",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

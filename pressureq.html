@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background:linear-gradient(135deg, #2563eb, #3b82f6, #60a5fa);
+      color: #f0f9ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+const quizData = [
+  {
+    question: "What is pressure?",
+    options: [
+      "Force per unit area",
+      "Force per unit mass",
+      "Mass per unit area",
+      "Area per unit force"
+    ],
+    answer: "Force per unit area"
+  },
+  {
+    question: "The SI unit of pressure is?",
+    options: ["Pascal", "Newton", "Joule", "Watt"],
+    answer: "Pascal"
+  },
+  {
+    question: "Which instrument is used to measure atmospheric pressure?",
+    options: ["Barometer", "Thermometer", "Manometer", "Hygrometer"],
+    answer: "Barometer"
+  },
+  {
+    question: "Which instrument is used to measure the pressure of a gas?",
+    options: ["Manometer", "Barometer", "Thermometer", "Hygrometer"],
+    answer: "Manometer"
+  },
+  {
+    question: "1 Pascal is equal to?",
+    options: [
+      "1 Newton per square meter",
+      "1 Newton per meter",
+      "1 Joule per meter",
+      "1 Newton per second"
+    ],
+    answer: "1 Newton per square meter"
+  },
+  {
+    question: "Pressure in liquids increases with?",
+    options: [
+      "Depth",
+      "Height above surface",
+      "Temperature",
+      "Area"
+    ],
+    answer: "Depth"
+  },
+  {
+    question: "Which of the following will increase pressure?",
+    options: [
+      "Decreasing area",
+      "Increasing area",
+      "Decreasing force",
+      "Decreasing mass"
+    ],
+    answer: "Decreasing area"
+  },
+  {
+    question: "Which of the following will decrease pressure?",
+    options: [
+      "Increasing area",
+      "Decreasing force",
+      "Decreasing area",
+      "Increasing force"
+    ],
+    answer: "Increasing area"
+  },
+  {
+    question: "Atmospheric pressure at sea level is about?",
+    options: [
+      "101,325 Pa",
+      "1,000 Pa",
+      "10,000 Pa",
+      "100 Pa"
+    ],
+    answer: "101,325 Pa"
+  },
+  {
+    question: "Which of the following is NOT a unit of pressure?",
+    options: ["Joule", "Pascal", "mmHg", "atm"],
+    answer: "Joule"
+  },
+  {
+    question: "Which law states that pressure applied to an enclosed fluid is transmitted equally?",
+    options: [
+      "Pascal's Law",
+      "Boyle's Law",
+      "Archimedes' Principle",
+      "Newton's Law"
+    ],
+    answer: "Pascal's Law"
+  },
+  {
+    question: "Which principle explains why a ship floats?",
+    options: [
+      "Archimedes' Principle",
+      "Pascal's Law",
+      "Boyle's Law",
+      "Newton's Law"
+    ],
+    answer: "Archimedes' Principle"
+  },
+  {
+    question: "Which of the following increases the pressure exerted by a liquid?",
+    options: [
+      "Increasing depth",
+      "Decreasing density",
+      "Decreasing depth",
+      "Decreasing gravity"
+    ],
+    answer: "Increasing depth"
+  },
+  {
+    question: "The pressure at the bottom of a liquid depends on?",
+    options: [
+      "Density, gravity, and depth",
+      "Area only",
+      "Volume only",
+      "Temperature only"
+    ],
+    answer: "Density, gravity, and depth"
+  },
+  {
+    question: "Which of the following is used to measure blood pressure?",
+    options: ["Sphygmomanometer", "Barometer", "Manometer", "Thermometer"],
+    answer: "Sphygmomanometer"
+  },
+  {
+    question: "Which of the following is NOT affected by pressure?",
+    options: [
+      "Mass of object",
+      "Boiling point of liquids",
+      "Melting point of solids",
+      "Solubility of gases"
+    ],
+    answer: "Mass of object"
+  },
+  {
+    question: "Which of the following is a practical application of pressure?",
+    options: [
+      "Hydraulic press",
+      "Electric bell",
+      "Thermometer",
+      "Bar magnet"
+    ],
+    answer: "Hydraulic press"
+  },
+  {
+    question: "Why do sharp knives cut better than blunt ones?",
+    options: [
+      "They exert more pressure",
+      "They are heavier",
+      "They are longer",
+      "They are made of steel"
+    ],
+    answer: "They exert more pressure"
+  },
+  {
+    question: "Why do camels have broad feet?",
+    options: [
+      "To reduce pressure on sand",
+      "To increase speed",
+      "To look attractive",
+      "To keep cool"
+    ],
+    answer: "To reduce pressure on sand"
+  },
+  {
+    question: "Why do nails have pointed ends?",
+    options: [
+      "To increase pressure for easy penetration",
+      "To look good",
+      "To reduce weight",
+      "To increase length"
+    ],
+    answer: "To increase pressure for easy penetration"
+  },
+  {
+    question: "Which of the following is true about pressure in gases?",
+    options: [
+      "It acts equally in all directions",
+      "It acts only downwards",
+      "It acts only upwards",
+      "It acts only sideways"
+    ],
+    answer: "It acts equally in all directions"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting liquid pressure?",
+    options: [
+      "Color of liquid",
+      "Density of liquid",
+      "Depth",
+      "Acceleration due to gravity"
+    ],
+    answer: "Color of liquid"
+  },
+  {
+    question: "What happens to atmospheric pressure as altitude increases?",
+    options: [
+      "It decreases",
+      "It increases",
+      "It remains the same",
+      "It becomes zero"
+    ],
+    answer: "It decreases"
+  },
+  {
+    question: "Which of the following is used in car brakes?",
+    options: [
+      "Hydraulic system",
+      "Magnetic system",
+      "Electric system",
+      "Thermal system"
+    ],
+    answer: "Hydraulic system"
+  },
+  {
+    question: "Which of the following is NOT a pressure measuring device?",
+    options: [
+      "Ammeter",
+      "Barometer",
+      "Manometer",
+      "Sphygmomanometer"
+    ],
+    answer: "Ammeter"
+  },
+  {
+    question: "Which of the following is a unit of atmospheric pressure?",
+    options: [
+      "atm",
+      "kg",
+      "m/s",
+      "Joule"
+    ],
+    answer: "atm"
+  },
+  {
+    question: "Which of the following is a unit of pressure?",
+    options: [
+      "mmHg",
+      "Newton",
+      "Meter",
+      "Coulomb"
+    ],
+    answer: "mmHg"
+  },
+  {
+    question: "Why do tractors have large rear wheels?",
+    options: [
+      "To reduce pressure on the ground",
+      "To increase speed",
+      "To look attractive",
+      "To increase weight"
+    ],
+    answer: "To reduce pressure on the ground"
+  },
+  {
+    question: "Why do we use snowshoes to walk on snow?",
+    options: [
+      "To reduce pressure on snow",
+      "To increase pressure on snow",
+      "To look stylish",
+      "To increase speed"
+    ],
+    answer: "To reduce pressure on snow"
+  },
+  {
+    question: "Which of the following is NOT a consequence of atmospheric pressure?",
+    options: [
+      "Boiling of water at lower temperature at high altitudes",
+      "Suction of drinks through a straw",
+      "Floating of ice on water",
+      "Rise of mercury in a barometer"
+    ],
+    answer: "Floating of ice on water"
+  },
+  {
+    question: "What is the pressure at a depth h in a liquid of density ρ?",
+    options: [
+      "P = ρgh",
+      "P = h/ρg",
+      "P = ρ/hg",
+      "P = ρg/h"
+    ],
+    answer: "P = ρgh"
+  },
+  {
+    question: "Which of the following is NOT a property of pressure?",
+    options: [
+      "It acts in all directions in a fluid",
+      "It is force per unit area",
+      "It is measured in Newtons",
+      "It increases with depth in liquids"
+    ],
+    answer: "It is measured in Newtons"
+  },
+  {
+    question: "Which of the following is NOT a use of atmospheric pressure?",
+    options: [
+      "Rising of water in a straw",
+      "Lifting of a suction cup",
+      "Floating of a boat",
+      "Working of a barometer"
+    ],
+    answer: "Floating of a boat"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting gas pressure?",
+    options: [
+      "Volume of container",
+      "Temperature",
+      "Number of molecules",
+      "Color of gas"
+    ],
+    answer: "Color of gas"
+  },
+  {
+    question: "Which of the following is NOT a unit of pressure?",
+    options: [
+      "Newton",
+      "Pascal",
+      "atm",
+      "mmHg"
+    ],
+    answer: "Newton"
+  },
+  {
+    question: "Which of the following is NOT a practical application of pressure?",
+    options: [
+      "Hydraulic lift",
+      "Barometer",
+      "Thermometer",
+      "Syringe"
+    ],
+    answer: "Thermometer"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting pressure in solids?",
+    options: [
+      "Area of contact",
+      "Force applied",
+      "Density of solid",
+      "Shape of object"
+    ],
+    answer: "Density of solid"
+  },
+  {
+    question: "Which of the following is NOT a property of liquids related to pressure?",
+    options: [
+      "Pressure increases with depth",
+      "Pressure is the same at all points at the same depth",
+      "Pressure acts only upwards",
+      "Pressure acts in all directions"
+    ],
+    answer: "Pressure acts only upwards"
+  }
+];
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...ing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Pressure",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

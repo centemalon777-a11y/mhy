@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
+      color: #f0fdf4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+const quizData = [
+  {
+    question: "What is elasticity?",
+    options: [
+      "The ability of a material to return to its original shape after deformation",
+      "The ability to conduct electricity",
+      "The ability to absorb water",
+      "The ability to resist heat"
+    ],
+    answer: "The ability of a material to return to its original shape after deformation"
+  },
+  {
+    question: "Which of the following is the SI unit of stress?",
+    options: ["Pascal", "Newton", "Joule", "Watt"],
+    answer: "Pascal"
+  },
+  {
+    question: "Which of the following is the SI unit of strain?",
+    options: ["It has no unit", "Pascal", "Newton", "Joule"],
+    answer: "It has no unit"
+  },
+  {
+    question: "What is Hooke's Law?",
+    options: [
+      "Stress is directly proportional to strain within the elastic limit",
+      "Force is directly proportional to mass",
+      "Pressure is inversely proportional to volume",
+      "Current is directly proportional to voltage"
+    ],
+    answer: "Stress is directly proportional to strain within the elastic limit"
+  },
+  {
+    question: "What is the elastic limit?",
+    options: [
+      "Maximum stress a material can withstand and still return to its original shape",
+      "Minimum stress required to deform a material",
+      "Maximum strain a material can withstand",
+      "The point where a material breaks"
+    ],
+    answer: "Maximum stress a material can withstand and still return to its original shape"
+  },
+  {
+    question: "Which of the following is NOT an elastic material?",
+    options: ["Lead", "Rubber", "Steel", "Copper"],
+    answer: "Lead"
+  },
+  {
+    question: "Which of the following is the most elastic material?",
+    options: ["Steel", "Rubber", "Copper", "Glass"],
+    answer: "Steel"
+  },
+  {
+    question: "Which of the following is the least elastic material?",
+    options: ["Lead", "Steel", "Rubber", "Copper"],
+    answer: "Lead"
+  },
+  {
+    question: "What is Young's modulus?",
+    options: [
+      "Ratio of stress to strain for a material in tension or compression",
+      "Ratio of force to area",
+      "Ratio of strain to stress",
+      "Ratio of pressure to volume"
+    ],
+    answer: "Ratio of stress to strain for a material in tension or compression"
+  },
+  {
+    question: "What is the SI unit of Young's modulus?",
+    options: ["Pascal", "Newton", "Joule", "Watt"],
+    answer: "Pascal"
+  },
+  {
+    question: "What is bulk modulus?",
+    options: [
+      "Ratio of volumetric stress to volumetric strain",
+      "Ratio of stress to strain for a material in tension",
+      "Ratio of force to area",
+      "Ratio of pressure to temperature"
+    ],
+    answer: "Ratio of volumetric stress to volumetric strain"
+  },
+  {
+    question: "What is the SI unit of bulk modulus?",
+    options: ["Pascal", "Newton", "Joule", "Watt"],
+    answer: "Pascal"
+  },
+  {
+    question: "What is shear modulus (modulus of rigidity)?",
+    options: [
+      "Ratio of shear stress to shear strain",
+      "Ratio of stress to strain for a material in tension",
+      "Ratio of force to area",
+      "Ratio of pressure to temperature"
+    ],
+    answer: "Ratio of shear stress to shear strain"
+  },
+  {
+    question: "What is the SI unit of shear modulus?",
+    options: ["Pascal", "Newton", "Joule", "Watt"],
+    answer: "Pascal"
+  },
+  {
+    question: "Which of the following is NOT a type of stress?",
+    options: ["Thermal stress", "Tensile stress", "Compressive stress", "Shear stress"],
+    answer: "Thermal stress"
+  },
+  {
+    question: "Which of the following is NOT a type of strain?",
+    options: ["Thermal strain", "Tensile strain", "Compressive strain", "Shear strain"],
+    answer: "Thermal strain"
+  },
+  {
+    question: "What is the formula for stress?",
+    options: [
+      "Force / Area",
+      "Force × Area",
+      "Area / Force",
+      "Force / Volume"
+    ],
+    answer: "Force / Area"
+  },
+  {
+    question: "What is the formula for strain?",
+    options: [
+      "Change in length / Original length",
+      "Force / Area",
+      "Area / Force",
+      "Change in area / Original area"
+    ],
+    answer: "Change in length / Original length"
+  },
+  {
+    question: "What happens to a material if it is stretched beyond its elastic limit?",
+    options: [
+      "It will not return to its original shape",
+      "It becomes more elastic",
+      "It becomes harder",
+      "It becomes lighter"
+    ],
+    answer: "It will not return to its original shape"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting elasticity?",
+    options: [
+      "Color of material",
+      "Temperature",
+      "Material type",
+      "Impurities"
+    ],
+    answer: "Color of material"
+  },
+  {
+    question: "Which of the following increases elasticity?",
+    options: [
+      "Lower temperature",
+      "Higher temperature",
+      "More impurities",
+      "Less density"
+    ],
+    answer: "Lower temperature"
+  },
+  {
+    question: "Which of the following decreases elasticity?",
+    options: [
+      "Higher temperature",
+      "Lower temperature",
+      "Less impurities",
+      "More density"
+    ],
+    answer: "Higher temperature"
+  },
+  {
+    question: "What is permanent set?",
+    options: [
+      "Deformation that remains after removing the load",
+      "Maximum stress a material can withstand",
+      "Ratio of stress to strain",
+      "Ability to return to original shape"
+    ],
+    answer: "Deformation that remains after removing the load"
+  },
+  {
+    question: "What is elastic fatigue?",
+    options: [
+      "Loss of elasticity due to repeated loading and unloading",
+      "Increase in elasticity due to heating",
+      "Ability to return to original shape",
+      "Permanent deformation"
+    ],
+    answer: "Loss of elasticity due to repeated loading and unloading"
+  },
+  {
+    question: "Which of the following is NOT a consequence of elastic fatigue?",
+    options: [
+      "Material breaks easily",
+      "Material becomes more elastic",
+      "Material cannot return to original shape",
+      "Material loses strength"
+    ],
+    answer: "Material becomes more elastic"
+  },
+  {
+    question: "Which of the following is NOT a practical application of elasticity?",
+    options: [
+      "Spring balance",
+      "Rubber bands",
+      "Steel bridges",
+      "Cooking food"
+    ],
+    answer: "Cooking food"
+  },
+  {
+    question: "Which of the following is NOT a property of an elastic material?",
+    options: [
+      "Returns to original shape after deformation",
+      "Can be stretched or compressed",
+      "Retains deformation permanently",
+      "Obeys Hooke's law within elastic limit"
+    ],
+    answer: "Retains deformation permanently"
+  },
+  {
+    question: "Which of the following is NOT a property of a plastic material?",
+    options: [
+      "Retains deformation permanently",
+      "Does not return to original shape",
+      "Obeys Hooke's law",
+      "Can be molded"
+    ],
+    answer: "Obeys Hooke's law"
+  },
+  {
+    question: "Which of the following is NOT a use of Young's modulus?",
+    options: [
+      "Designing bridges",
+      "Making springs",
+      "Measuring temperature",
+      "Testing materials"
+    ],
+    answer: "Measuring temperature"
+  },
+  {
+    question: "Which of the following is NOT a use of bulk modulus?",
+    options: [
+      "Studying compressibility of liquids",
+      "Designing hydraulic machines",
+      "Measuring temperature",
+      "Testing materials"
+    ],
+    answer: "Measuring temperature"
+  },
+  {
+    question: "Which of the following is NOT a use of shear modulus?",
+    options: [
+      "Designing beams",
+      "Making springs",
+      "Measuring temperature",
+      "Testing materials"
+    ],
+    answer: "Measuring temperature"
+  },
+  {
+    question: "Which of the following is NOT a consequence of exceeding the elastic limit?",
+    options: [
+      "Permanent deformation",
+      "Material breaks",
+      "Material returns to original shape",
+      "Loss of elasticity"
+    ],
+    answer: "Material returns to original shape"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting Young's modulus?",
+    options: [
+      "Material type",
+      "Temperature",
+      "Length of material",
+      "Impurities"
+    ],
+    answer: "Length of material"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting bulk modulus?",
+    options: [
+      "Material type",
+      "Temperature",
+      "Volume of material",
+      "Impurities"
+    ],
+    answer: "Volume of material"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting shear modulus?",
+    options: [
+      "Material type",
+      "Temperature",
+      "Shape of material",
+      "Impurities"
+    ],
+    answer: "Shape of material"
+  },
+  {
+    question: "Which of the following is NOT a property of perfectly elastic material?",
+    options: [
+      "Returns completely to original shape",
+      "Obeys Hooke's law for all values of stress",
+      "Has infinite elastic limit",
+      "Retains deformation permanently"
+    ],
+    answer: "Retains deformation permanently"
+  },
+  {
+    question: "Which of the following is NOT a property of perfectly plastic material?",
+    options: [
+      "Does not return to original shape",
+      "Retains deformation permanently",
+      "Obeys Hooke's law",
+      "Has zero elastic limit"
+    ],
+    answer: "Obeys Hooke's law"
+  }
+];
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...ing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Elasticity",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

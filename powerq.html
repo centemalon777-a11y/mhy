@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f766e, #14b8a6, #2dd4bf);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+const quizData = [
+  {
+    question: "What is power in physics?",
+    options: [
+      "The rate of doing work",
+      "The amount of force applied",
+      "The energy stored in an object",
+      "The distance moved by an object"
+    ],
+    answer: "The rate of doing work"
+  },
+  {
+    question: "The SI unit of power is?",
+    options: ["Watt", "Joule", "Newton", "Pascal"],
+    answer: "Watt"
+  },
+  {
+    question: "Which of the following is NOT a unit of power?",
+    options: ["Joule", "Watt", "Horsepower", "Kilowatt"],
+    answer: "Joule"
+  },
+  {
+    question: "What is the formula for power?",
+    options: [
+      "Power = Work / Time",
+      "Power = Force × Distance",
+      "Power = Mass × Acceleration",
+      "Power = Energy × Time"
+    ],
+    answer: "Power = Work / Time"
+  },
+  {
+    question: "If 200 J of work is done in 10 seconds, what is the power?",
+    options: ["20 W", "2 W", "2000 W", "0.05 W"],
+    answer: "20 W"
+  },
+  {
+    question: "If a machine does 500 J of work in 25 seconds, its power is?",
+    options: ["20 W", "25 W", "50 W", "10 W"],
+    answer: "20 W"
+  },
+  {
+    question: "Which of the following is equivalent to 1 Watt?",
+    options: [
+      "1 Joule per second",
+      "1 Newton per meter",
+      "1 Joule per meter",
+      "1 Newton per second"
+    ],
+    answer: "1 Joule per second"
+  },
+  {
+    question: "A 60 W bulb is used for 2 hours. How much energy is consumed?",
+    options: ["432,000 J", "120 J", "7,200 J", "60 J"],
+    answer: "432,000 J"
+  },
+  {
+    question: "Which of the following is a larger unit of power?",
+    options: ["Kilowatt", "Watt", "Milliwatt", "Microwatt"],
+    answer: "Kilowatt"
+  },
+  {
+    question: "1 horsepower is equal to how many watts?",
+    options: ["746 W", "1000 W", "550 W", "100 W"],
+    answer: "746 W"
+  },
+  {
+    question: "If a person does 1000 J of work in 50 seconds, what is the power?",
+    options: ["20 W", "50 W", "100 W", "10 W"],
+    answer: "20 W"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting power?",
+    options: [
+      "Work done",
+      "Time taken",
+      "Mass of object",
+      "Rate of doing work"
+    ],
+    answer: "Mass of object"
+  },
+  {
+    question: "If two machines do the same work but one is faster, which has more power?",
+    options: [
+      "The faster machine",
+      "The slower machine",
+      "Both have equal power",
+      "Cannot be determined"
+    ],
+    answer: "The faster machine"
+  },
+  {
+    question: "If a 100 W device runs for 1 hour, how much energy is used?",
+    options: ["360,000 J", "100 J", "1,000 J", "10,000 J"],
+    answer: "360,000 J"
+  },
+  {
+    question: "Which of the following is NOT a practical unit of power?",
+    options: ["Joule", "Watt", "Kilowatt", "Horsepower"],
+    answer: "Joule"
+  },
+  {
+    question: "If a 2 kW heater is used for 30 minutes, how much energy is consumed?",
+    options: ["3,600,000 J", "60,000 J", "120,000 J", "240,000 J"],
+    answer: "3,600,000 J"
+  },
+  {
+    question: "Which of the following appliances uses the most power?",
+    options: ["Electric iron (1000 W)", "Bulb (60 W)", "Fan (75 W)", "Radio (10 W)"],
+    answer: "Electric iron (1000 W)"
+  },
+  {
+    question: "If a machine has high power, it means it can do work...",
+    options: [
+      "In less time",
+      "With less energy",
+      "With less force",
+      "With more mass"
+    ],
+    answer: "In less time"
+  },
+  {
+    question: "Which of the following is NOT a way to increase power?",
+    options: [
+      "Increase work done",
+      "Decrease time taken",
+      "Increase time taken",
+      "Do the same work in less time"
+    ],
+    answer: "Increase time taken"
+  },
+  {
+    question: "If a 500 W motor lifts a 100 kg mass to a height of 10 m in 20 s, what is the efficiency? (g = 10 m/s²)",
+    options: ["100%", "20%", "40%", "10%"],
+    answer: "20%"
+  },
+  {
+    question: "Which of the following is NOT a source of power?",
+    options: ["Battery", "Spring", "Generator", "Solar panel"],
+    answer: "Spring"
+  },
+  {
+    question: "If a 1500 W kettle boils water in 4 minutes, how much energy is used?",
+    options: ["360,000 J", "6,000 J", "90,000 J", "150 J"],
+    answer: "360,000 J"
+  },
+  {
+    question: "Which of the following is NOT a renewable source of power?",
+    options: ["Coal", "Solar", "Wind", "Hydro"],
+    answer: "Coal"
+  },
+  {
+    question: "If a 200 W bulb is used for 5 hours, what is the energy consumed in kWh?",
+    options: ["1 kWh", "0.5 kWh", "2 kWh", "10 kWh"],
+    answer: "1 kWh"
+  },
+  {
+    question: "Which of the following is NOT a correct pair?",
+    options: [
+      "Watt - Power",
+      "Joule - Energy",
+      "Newton - Power",
+      "Horsepower - Power"
+    ],
+    answer: "Newton - Power"
+  },
+  {
+    question: "If a 1000 W motor does 10,000 J of work, how long does it take?",
+    options: ["10 s", "100 s", "1 s", "0.1 s"],
+    answer: "10 s"
+  },
+  {
+    question: "Which of the following is NOT a factor in calculating electrical power?",
+    options: [
+      "Current",
+      "Voltage",
+      "Resistance",
+      "Mass"
+    ],
+    answer: "Mass"
+  },
+  {
+    question: "The power output of a machine is 500 W. If it works for 2 minutes, what is the total work done?",
+    options: ["60,000 J", "1,000 J", "500 J", "120,000 J"],
+    answer: "60,000 J"
+  },
+  {
+    question: "Which of the following is NOT a way to reduce power consumption?",
+    options: [
+      "Use energy-efficient devices",
+      "Switch off unused appliances",
+      "Use higher wattage bulbs",
+      "Use solar power"
+    ],
+    answer: "Use higher wattage bulbs"
+  },
+  {
+    question: "If a 60 W bulb is used for 10 hours, how much energy is used in kWh?",
+    options: ["0.6 kWh", "6 kWh", "60 kWh", "0.06 kWh"],
+    answer: "0.6 kWh"
+  },
+  {
+    question: "Which of the following is NOT a power rating?",
+    options: ["100 W", "1 kW", "10 J", "500 W"],
+    answer: "10 J"
+  },
+  {
+    question: "If a 2 kW heater is used for 3 hours, how much energy is consumed in kWh?",
+    options: ["6 kWh", "5 kWh", "2 kWh", "1 kWh"],
+    answer: "6 kWh"
+  },
+  {
+    question: "Which of the following is NOT a unit of electrical power?",
+    options: ["Watt", "Kilowatt", "Ampere", "Horsepower"],
+    answer: "Ampere"
+  },
+  {
+    question: "If a 100 W device is used for 30 minutes, how much energy is used in Joules?",
+    options: ["180,000 J", "3,000 J", "30,000 J", "1,800 J"],
+    answer: "180,000 J"
+  },
+  {
+    question: "Which of the following is NOT a factor affecting mechanical power?",
+    options: [
+      "Work done",
+      "Time taken",
+      "Distance moved",
+      "Color of machine"
+    ],
+    answer: "Color of machine"
+  },
+  {
+    question: "If a 500 W pump lifts 1000 kg of water to a height of 10 m in 200 s, what is the efficiency? (g = 10 m/s²)",
+    options: ["20%", "10%", "50%", "100%"],
+    answer: "20%"
+  },
+  {
+    question: "Which of the following is NOT a way to increase the power of a machine?",
+    options: [
+      "Increase work done",
+      "Decrease time taken",
+      "Increase time taken",
+      "Increase force applied"
+    ],
+    answer: "Increase time taken"
+  },
+  {
+    question: "If a 250 W fan runs for 8 hours, how much energy is used in kWh?",
+    options: ["2 kWh", "1 kWh", "0.5 kWh", "4 kWh"],
+    answer: "2 kWh"
+  },
+  {
+    question: "Which of the following is NOT a correct statement about power?",
+    options: [
+      "Power is the rate of doing work",
+      "Power is measured in watts",
+      "Power is the same as energy",
+      "Power can be calculated as work divided by time"
+    ],
+    answer: "Power is the same as energy"
+  }
+];
+// ...existing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Power",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

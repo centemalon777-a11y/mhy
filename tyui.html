@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<style>
+body{font-family:Poppins,sans-serif;background:#0ea5e9;color:#fff;padding:20px;}
+h2{margin-top:0;}
+button{padding:8px 12px;border:none;border-radius:6px;background:#22c55e;color:#fff;cursor:pointer;margin-top:5px;}
+input, select{padding:8px;margin-top:5px;border-radius:6px;border:none;width:100%;}
+.card{background:rgba(0,0,0,0.3);padding:15px;border-radius:12px;margin-bottom:20px;}
+</style>
+</head>
+<body>
+
+<h1>Admin Dashboard</h1>
+<button id="logoutBtn">Logout</button>
+
+<div class="card">
+  <h2>Send Notification to Student</h2>
+  <input type="text" id="studentName" placeholder="Student Username">
+  <input type="text" id="notificationText" placeholder="Message">
+  <button id="sendNotif">Send</button>
+</div>
+
+<div class="card">
+  <h2>Add Event</h2>
+  <input type="text" id="eventTitle" placeholder="Event Title">
+  <input type="date" id="eventDate">
+  <button id="addEvent">Add Event</button>
+</div>
+
+<script>
+// ===== Logout =====
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  localStorage.removeItem('currentAdmin');
+  window.location.href='admin-login.html';
+});
+
+// ===== Send Notification =====
+document.getElementById('sendNotif').addEventListener('click', ()=>{
+  const student = document.getElementById('studentName').value.trim();
+  const text = document.getElementById('notificationText').value.trim();
+  if(student && text){
+    let notifications = JSON.parse(localStorage.getItem('notifications_' + student) || '[]');
+    notifications.push({text, ts: Date.now()});
+    localStorage.setItem('notifications_' + student, JSON.stringify(notifications));
+    alert('Notification sent!');
+    document.getElementById('studentName').value = '';
+    document.getElementById('notificationText').value = '';
+  }else{
+    alert('Enter student username and message');
+  }
+});
+
+// ===== Add Event =====
+document.getElementById('addEvent').addEventListener('click', ()=>{
+  const title = document.getElementById('eventTitle').value.trim();
+  const date = document.getElementById('eventDate').value;
+  if(title && date){
+    let events = JSON.parse(localStorage.getItem('events')||'[]');
+    events.push({id:Date.now(), title, date, registered:[]});
+    localStorage.setItem('events', JSON.stringify(events));
+    alert('Event added!');
+    document.getElementById('eventTitle').value = '';
+    document.getElementById('eventDate').value = '';
+  }else{
+    alert('Enter title and date');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background:linear-gradient(135deg, #14532d, #16a34a, #86efac);
+      color: #f0fdf4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+const quizData = [
+  {
+    question: "What is a simple machine?",
+    options: [
+      "A device that makes work easier",
+      "A device that produces electricity",
+      "A device that stores energy",
+      "A device that measures force"
+    ],
+    answer: "A device that makes work easier"
+  },
+  {
+    question: "Which of the following is NOT a simple machine?",
+    options: ["Bicycle", "Lever", "Pulley", "Inclined plane"],
+    answer: "Bicycle"
+  },
+  {
+    question: "How many types of simple machines are there?",
+    options: ["Six", "Three", "Four", "Two"],
+    answer: "Six"
+  },
+  {
+    question: "Which of the following is a type of simple machine?",
+    options: ["Wedge", "Battery", "Motor", "Bulb"],
+    answer: "Wedge"
+  },
+  {
+    question: "Which of the following is a lever?",
+    options: ["Seesaw", "Screw", "Wheelbarrow", "Pulley"],
+    answer: "Seesaw"
+  },
+  {
+    question: "Which of the following is an inclined plane?",
+    options: ["Ramp", "Screwdriver", "Scissors", "Pulley"],
+    answer: "Ramp"
+  },
+  {
+    question: "Which of the following is a pulley?",
+    options: ["Flagpole rope", "Knife", "Hammer", "Screw"],
+    answer: "Flagpole rope"
+  },
+  {
+    question: "Which of the following is a wheel and axle?",
+    options: ["Door knob", "Knife", "Ramp", "Lever"],
+    answer: "Door knob"
+  },
+  {
+    question: "Which of the following is a screw?",
+    options: ["Jar lid", "Ramp", "Pulley", "Lever"],
+    answer: "Jar lid"
+  },
+  {
+    question: "Which of the following is a wedge?",
+    options: ["Knife", "Pulley", "Wheel", "Lever"],
+    answer: "Knife"
+  },
+  {
+    question: "What is the function of a simple machine?",
+    options: [
+      "To make work easier",
+      "To increase energy",
+      "To decrease energy",
+      "To store energy"
+    ],
+    answer: "To make work easier"
+  },
+  {
+    question: "A crowbar is an example of which type of lever?",
+    options: ["First class", "Second class", "Third class", "Fourth class"],
+    answer: "First class"
+  },
+  {
+    question: "A wheelbarrow is an example of which type of lever?",
+    options: ["Second class", "First class", "Third class", "Fourth class"],
+    answer: "Second class"
+  },
+  {
+    question: "A pair of tweezers is an example of which type of lever?",
+    options: ["Third class", "First class", "Second class", "Fourth class"],
+    answer: "Third class"
+  },
+  {
+    question: "What is the mechanical advantage of a machine?",
+    options: [
+      "Ratio of load to effort",
+      "Sum of load and effort",
+      "Difference between load and effort",
+      "Product of load and effort"
+    ],
+    answer: "Ratio of load to effort"
+  },
+  {
+    question: "What is the velocity ratio of a machine?",
+    options: [
+      "Ratio of distance moved by effort to distance moved by load",
+      "Ratio of load to effort",
+      "Sum of load and effort",
+      "Product of load and effort"
+    ],
+    answer: "Ratio of distance moved by effort to distance moved by load"
+  },
+  {
+    question: "What is the efficiency of a machine?",
+    options: [
+      "Ratio of work output to work input",
+      "Sum of work output and input",
+      "Difference between work output and input",
+      "Product of work output and input"
+    ],
+    answer: "Ratio of work output to work input"
+  },
+  {
+    question: "Which of the following is NOT a lever?",
+    options: ["Screw", "Scissors", "Crowbar", "Pliers"],
+    answer: "Screw"
+  },
+  {
+    question: "Which of the following is a first class lever?",
+    options: ["Seesaw", "Wheelbarrow", "Nutcracker", "Fishing rod"],
+    answer: "Seesaw"
+  },
+  {
+    question: "Which of the following is a second class lever?",
+    options: ["Wheelbarrow", "Seesaw", "Fishing rod", "Scissors"],
+    answer: "Wheelbarrow"
+  },
+  {
+    question: "Which of the following is a third class lever?",
+    options: ["Fishing rod", "Seesaw", "Wheelbarrow", "Nutcracker"],
+    answer: "Fishing rod"
+  },
+  {
+    question: "Which of the following is NOT a use of a pulley?",
+    options: [
+      "Cutting wood",
+      "Lifting loads",
+      "Drawing water from a well",
+      "Raising a flag"
+    ],
+    answer: "Cutting wood"
+  },
+  {
+    question: "Which of the following is NOT a use of an inclined plane?",
+    options: [
+      "Cutting paper",
+      "Loading goods onto a truck",
+      "Wheelchair ramp",
+      "Slide"
+    ],
+    answer: "Cutting paper"
+  },
+  {
+    question: "Which of the following is NOT a use of a wedge?",
+    options: [
+      "Lifting a car",
+      "Splitting wood",
+      "Cutting vegetables",
+      "Chisel"
+    ],
+    answer: "Lifting a car"
+  },
+  {
+    question: "Which of the following is NOT a use of a screw?",
+    options: [
+      "Hammering nails",
+      "Holding objects together",
+      "Lifting heavy objects",
+      "Jar lid"
+    ],
+    answer: "Hammering nails"
+  },
+  {
+    question: "Which of the following is NOT a use of a wheel and axle?",
+    options: [
+      "Cutting paper",
+      "Bicycle",
+      "Rolling pin",
+      "Door knob"
+    ],
+    answer: "Cutting paper"
+  },
+  {
+    question: "Which of the following is NOT a simple machine?",
+    options: ["Bulb", "Lever", "Pulley", "Wedge"],
+    answer: "Bulb"
+  },
+  {
+    question: "Which of the following is a simple machine used to split objects?",
+    options: ["Wedge", "Pulley", "Screw", "Lever"],
+    answer: "Wedge"
+  },
+  {
+    question: "Which of the following is a simple machine used to lift heavy loads?",
+    options: ["Pulley", "Wedge", "Screw", "Lever"],
+    answer: "Pulley"
+  },
+  {
+    question: "Which of the following is a simple machine used to hold things together?",
+    options: ["Screw", "Pulley", "Wedge", "Lever"],
+    answer: "Screw"
+  },
+  {
+    question: "Which of the following is a simple machine used to move objects easily?",
+    options: ["Wheel and axle", "Wedge", "Screw", "Lever"],
+    answer: "Wheel and axle"
+  },
+  {
+    question: "Which of the following is NOT a characteristic of a simple machine?",
+    options: [
+      "It makes work easier",
+      "It increases the amount of work done",
+      "It changes the direction of force",
+      "It multiplies force"
+    ],
+    answer: "It increases the amount of work done"
+  },
+  {
+    question: "What is the load in a simple machine?",
+    options: [
+      "The object to be moved",
+      "The force applied",
+      "The distance moved",
+      "The energy used"
+    ],
+    answer: "The object to be moved"
+  },
+  {
+    question: "What is the effort in a simple machine?",
+    options: [
+      "The force applied",
+      "The object to be moved",
+      "The distance moved",
+      "The energy used"
+    ],
+    answer: "The force applied"
+  },
+  {
+    question: "Which of the following is NOT a benefit of using simple machines?",
+    options: [
+      "Increases the amount of work done",
+      "Makes work easier",
+      "Changes the direction of force",
+      "Multiplies force"
+    ],
+    answer: "Increases the amount of work done"
+  },
+  {
+    question: "Which of the following is NOT a type of lever?",
+    options: [
+      "Fourth class",
+      "First class",
+      "Second class",
+      "Third class"
+    ],
+    answer: "Fourth class"
+  },
+  {
+    question: "Which of the following is a simple machine used in a bottle opener?",
+    options: [
+      "Lever",
+      "Pulley",
+      "Wedge",
+      "Screw"
+    ],
+    answer: "Lever"
+  },
+  {
+    question: "Which of the following is a simple machine used in a staircase?",
+    options: [
+      "Inclined plane",
+      "Pulley",
+      "Wedge",
+      "Screw"
+    ],
+    answer: "Inclined plane"
+  },
+  {
+    question: "Which of the following is a simple machine used in a knife?",
+    options: [
+      "Wedge",
+      "Pulley",
+      "Screw",
+      "Lever"
+    ],
+    answer: "Wedge"
+  },
+  {
+    question: "Which of the following is a simple machine used in a flagpole?",
+    options: [
+      "Pulley",
+      "Wedge",
+      "Screw",
+      "Lever"
+    ],
+    answer: "Pulley"
+  }
+];
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...ing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Simple Machines",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

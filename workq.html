@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background:linear-gradient(135deg, #0f172a, #1d4ed8, #60a5fa);
+      color: #f0f9ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+// ...existing code...
+// ...existing code...
+// ...existing code...
+const quizData = [
+  {
+    question: "What is work in physics?",
+    options: [
+      "Force applied over a distance",
+      "Energy stored in an object",
+      "Rate of doing work",
+      "Force per unit area"
+    ],
+    answer: "Force applied over a distance"
+  },
+  {
+    question: "The SI unit of work is?",
+    options: ["Joule", "Watt", "Newton", "Meter"],
+    answer: "Joule"
+  },
+  {
+    question: "What is the formula for work?",
+    options: [
+      "Work = Force × Distance",
+      "Work = Mass × Acceleration",
+      "Work = Power × Time",
+      "Work = Energy / Time"
+    ],
+    answer: "Work = Force × Distance"
+  },
+  {
+    question: "If no displacement occurs, the work done is?",
+    options: ["Zero", "Maximum", "Minimum", "Infinite"],
+    answer: "Zero"
+  },
+  {
+    question: "The SI unit of energy is?",
+    options: ["Joule", "Watt", "Newton", "Meter"],
+    answer: "Joule"
+  },
+  {
+    question: "The SI unit of power is?",
+    options: ["Watt", "Joule", "Newton", "Meter"],
+    answer: "Watt"
+  },
+  {
+    question: "What is power?",
+    options: [
+      "Rate of doing work",
+      "Force applied over a distance",
+      "Energy stored in an object",
+      "Work done per unit force"
+    ],
+    answer: "Rate of doing work"
+  },
+  {
+    question: "What is the formula for power?",
+    options: [
+      "Power = Work / Time",
+      "Power = Force × Distance",
+      "Power = Mass × Acceleration",
+      "Power = Energy × Time"
+    ],
+    answer: "Power = Work / Time"
+  },
+  {
+    question: "Which of the following is NOT a form of energy?",
+    options: ["Magnetic", "Thermal", "Friction", "Chemical"],
+    answer: "Friction"
+  },
+  {
+    question: "What is kinetic energy?",
+    options: [
+      "Energy due to motion",
+      "Energy due to position",
+      "Energy stored in food",
+      "Energy from the sun"
+    ],
+    answer: "Energy due to motion"
+  },
+  {
+    question: "What is the formula for kinetic energy?",
+    options: [
+      "½mv²",
+      "mgh",
+      "F × d",
+      "P × t"
+    ],
+    answer: "½mv²"
+  },
+  {
+    question: "What is potential energy?",
+    options: [
+      "Energy due to position",
+      "Energy due to motion",
+      "Energy from heat",
+      "Energy from light"
+    ],
+    answer: "Energy due to position"
+  },
+  {
+    question: "What is the formula for gravitational potential energy?",
+    options: [
+      "mgh",
+      "½mv²",
+      "F × d",
+      "P × t"
+    ],
+    answer: "mgh"
+  },
+  {
+    question: "If a force of 10 N moves an object 5 m, the work done is?",
+    options: ["50 J", "5 J", "2 J", "15 J"],
+    answer: "50 J"
+  },
+  {
+    question: "If 100 J of work is done in 20 s, the power is?",
+    options: ["5 W", "2 W", "20 W", "0.2 W"],
+    answer: "5 W"
+  },
+  {
+    question: "Which of the following is a renewable source of energy?",
+    options: ["Solar", "Coal", "Petrol", "Diesel"],
+    answer: "Solar"
+  },
+  {
+    question: "Which of the following is a non-renewable source of energy?",
+    options: ["Coal", "Wind", "Solar", "Hydro"],
+    answer: "Coal"
+  },
+  {
+    question: "The energy stored in a stretched rubber band is?",
+    options: [
+      "Elastic potential energy",
+      "Kinetic energy",
+      "Chemical energy",
+      "Thermal energy"
+    ],
+    answer: "Elastic potential energy"
+  },
+  {
+    question: "The energy possessed by a moving car is?",
+    options: [
+      "Kinetic energy",
+      "Potential energy",
+      "Chemical energy",
+      "Nuclear energy"
+    ],
+    answer: "Kinetic energy"
+  },
+  {
+    question: "The energy stored in food is?",
+    options: [
+      "Chemical energy",
+      "Kinetic energy",
+      "Potential energy",
+      "Thermal energy"
+    ],
+    answer: "Chemical energy"
+  },
+  {
+    question: "The law of conservation of energy states that?",
+    options: [
+      "Energy cannot be created or destroyed",
+      "Energy can be created",
+      "Energy can be destroyed",
+      "Energy is always lost"
+    ],
+    answer: "Energy cannot be created or destroyed"
+  },
+  {
+    question: "Which of the following appliances converts electrical energy to heat energy?",
+    options: ["Electric iron", "Fan", "Bulb", "Radio"],
+    answer: "Electric iron"
+  },
+  {
+    question: "Which of the following converts chemical energy to electrical energy?",
+    options: ["Battery", "Bulb", "Fan", "Speaker"],
+    answer: "Battery"
+  },
+  {
+    question: "Which of the following converts electrical energy to light energy?",
+    options: ["Bulb", "Battery", "Speaker", "Fan"],
+    answer: "Bulb"
+  },
+  {
+    question: "Which of the following is NOT a unit of energy?",
+    options: ["Watt", "Joule", "Calorie", "Kilowatt-hour"],
+    answer: "Watt"
+  },
+  {
+    question: "If a 60 W bulb is used for 2 hours, the energy consumed is?",
+    options: ["120 Wh", "30 Wh", "60 Wh", "2 Wh"],
+    answer: "120 Wh"
+  },
+  {
+    question: "Which of the following is a unit of power?",
+    options: ["Watt", "Joule", "Calorie", "Newton"],
+    answer: "Watt"
+  },
+  {
+    question: "If a man lifts a 20 kg box to a height of 2 m, the work done is? (g = 10 m/s²)",
+    options: ["400 J", "40 J", "200 J", "20 J"],
+    answer: "400 J"
+  },
+  {
+    question: "The rate at which work is done is called?",
+    options: ["Power", "Energy", "Force", "Speed"],
+    answer: "Power"
+  },
+  {
+    question: "Which of the following is NOT a form of potential energy?",
+    options: [
+      "Kinetic energy",
+      "Gravitational potential energy",
+      "Elastic potential energy",
+      "Chemical energy"
+    ],
+    answer: "Kinetic energy"
+  },
+  {
+    question: "The energy possessed by water stored in a dam is?",
+    options: [
+      "Gravitational potential energy",
+      "Kinetic energy",
+      "Chemical energy",
+      "Thermal energy"
+    ],
+    answer: "Gravitational potential energy"
+  },
+  {
+    question: "The energy possessed by a moving bullet is?",
+    options: [
+      "Kinetic energy",
+      "Potential energy",
+      "Chemical energy",
+      "Nuclear energy"
+    ],
+    answer: "Kinetic energy"
+  },
+  {
+    question: "The energy possessed by a compressed spring is?",
+    options: [
+      "Elastic potential energy",
+      "Kinetic energy",
+      "Chemical energy",
+      "Thermal energy"
+    ],
+    answer: "Elastic potential energy"
+  },
+  {
+    question: "Which of the following is NOT a source of energy?",
+    options: ["Friction", "Sun", "Wind", "Water"],
+    answer: "Friction"
+  },
+  {
+    question: "The energy from the sun is called?",
+    options: [
+      "Solar energy",
+      "Wind energy",
+      "Hydro energy",
+      "Geothermal energy"
+    ],
+    answer: "Solar energy"
+  },
+  {
+    question: "The energy possessed by a body due to its motion is?",
+    options: [
+      "Kinetic energy",
+      "Potential energy",
+      "Chemical energy",
+      "Thermal energy"
+    ],
+    answer: "Kinetic energy"
+  },
+  {
+    question: "The energy possessed by a body due to its position is?",
+    options: [
+      "Potential energy",
+      "Kinetic energy",
+      "Chemical energy",
+      "Thermal energy"
+    ],
+    answer: "Potential energy"
+  },
+  {
+    question: "The energy stored in petrol is?",
+    options: [
+      "Chemical energy",
+      "Kinetic energy",
+      "Potential energy",
+      "Thermal energy"
+    ],
+    answer: "Chemical energy"
+  },
+  {
+    question: "The energy possessed by a hot object is?",
+    options: [
+      "Thermal energy",
+      "Kinetic energy",
+      "Potential energy",
+      "Chemical energy"
+    ],
+    answer: "Thermal energy"
+  }
+];
+// ...existing code...
+// ...existing code...
+// ...existing code...ing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Force",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

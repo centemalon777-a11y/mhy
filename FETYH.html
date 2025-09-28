@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Section - LearnHub</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.6);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    h2 { margin-bottom: 20px; }
+    .options { margin: 15px 0; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn {
+      margin-top: 15px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #22c55e;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="question">Loading Question...</h2>
+  <div class="options" id="options"></div>
+  <button id="next-btn">Next</button>
+  <div id="result"></div>
+</div>
+
+<script>
+// ...existing code...
+const quizData = [
+  {
+    question: "What is the SI unit of force?",
+    options: ["Newton", "Joule", "Pascal", "Watt"],
+    answer: "Newton"
+  },
+  {
+    question: "Who formulated the laws of motion?",
+    options: ["Einstein", "Newton", "Galileo", "Faraday"],
+    answer: "Newton"
+  },
+  {
+    question: "What is the acceleration due to gravity on Earth?",
+    options: ["9.8 m/s²", "6.67 m/s²", "3.0 m/s²", "1.6 m/s²"],
+    answer: "9.8 m/s²"
+  },
+  {
+    question: "Which law states that energy cannot be created or destroyed?",
+    options: ["Law of Conservation of Energy", "Ohm's Law", "Boyle's Law", "Hooke's Law"],
+    answer: "Law of Conservation of Energy"
+  },
+  {
+    question: "What is the speed of light in vacuum?",
+    options: ["3 x 10^8 m/s", "1.5 x 10^8 m/s", "3 x 10^6 m/s", "1 x 10^8 m/s"],
+    answer: "3 x 10^8 m/s"
+  },
+  {
+    question: "Which particle has a negative charge?",
+    options: ["Electron", "Proton", "Neutron", "Photon"],
+    answer: "Electron"
+  },
+  {
+    question: "What is the formula for kinetic energy?",
+    options: ["½mv²", "mgh", "F=ma", "V=IR"],
+    answer: "½mv²"
+  },
+  {
+    question: "Who discovered electromagnetic induction?",
+    options: ["Faraday", "Newton", "Einstein", "Bohr"],
+    answer: "Faraday"
+  },
+  {
+    question: "What is the unit of electric current?",
+    options: ["Ampere", "Volt", "Ohm", "Coulomb"],
+    answer: "Ampere"
+  },
+  {
+    question: "Which law relates voltage, current, and resistance?",
+    options: ["Ohm's Law", "Newton's Law", "Kepler's Law", "Boyle's Law"],
+    answer: "Ohm's Law"
+  },
+  {
+    question: "What is the SI unit of power?",
+    options: ["Watt", "Joule", "Newton", "Ampere"],
+    answer: "Watt"
+  },
+  {
+    question: "What is the formula for work done?",
+    options: ["Force x Distance", "Mass x Acceleration", "½mv²", "V=IR"],
+    answer: "Force x Distance"
+  },
+  {
+    question: "Which planet has the strongest gravity?",
+    options: ["Jupiter", "Earth", "Mars", "Venus"],
+    answer: "Jupiter"
+  },
+  {
+    question: "What is the charge of a proton?",
+    options: ["Positive", "Negative", "Neutral", "Zero"],
+    answer: "Positive"
+  },
+  {
+    question: "What is the process of heat transfer through direct contact?",
+    options: ["Conduction", "Convection", "Radiation", "Evaporation"],
+    answer: "Conduction"
+  },
+  {
+    question: "What is the frequency unit?",
+    options: ["Hertz", "Newton", "Joule", "Watt"],
+    answer: "Hertz"
+  },
+  {
+    question: "Which color of light has the shortest wavelength?",
+    options: ["Violet", "Red", "Green", "Yellow"],
+    answer: "Violet"
+  },
+  {
+    question: "What is the formula for pressure?",
+    options: ["Force/Area", "Mass/Volume", "Work/Time", "Energy/Charge"],
+    answer: "Force/Area"
+  },
+  {
+    question: "Who proposed the theory of relativity?",
+    options: ["Einstein", "Newton", "Faraday", "Bohr"],
+    answer: "Einstein"
+  },
+  {
+    question: "What is the SI unit of temperature?",
+    options: ["Kelvin", "Celsius", "Fahrenheit", "Joule"],
+    answer: "Kelvin"
+  },
+  {
+    question: "What is the formula for density?",
+    options: ["Mass/Volume", "Force/Area", "Work/Time", "Energy/Charge"],
+    answer: "Mass/Volume"
+  },
+  {
+    question: "What is the main gas in Earth's atmosphere?",
+    options: ["Nitrogen", "Oxygen", "Carbon Dioxide", "Hydrogen"],
+    answer: "Nitrogen"
+  },
+  {
+    question: "What is the SI unit of frequency?",
+    options: ["Hertz", "Newton", "Joule", "Watt"],
+    answer: "Hertz"
+  },
+  {
+    question: "What is the formula for Ohm's Law?",
+    options: ["V=IR", "F=ma", "E=mc²", "P=VI"],
+    answer: "V=IR"
+  },
+  {
+    question: "Which type of lens converges light rays?",
+    options: ["Convex", "Concave", "Flat", "Cylindrical"],
+    answer: "Convex"
+  },
+  {
+    question: "What is the SI unit of charge?",
+    options: ["Coulomb", "Ampere", "Volt", "Ohm"],
+    answer: "Coulomb"
+  },
+  {
+    question: "What is the value of acceleration due to gravity on the Moon?",
+    options: ["1.6 m/s²", "9.8 m/s²", "3.7 m/s²", "0.98 m/s²"],
+    answer: "1.6 m/s²"
+  },
+  {
+    question: "What is the formula for potential energy?",
+    options: ["mgh", "½mv²", "V=IR", "F=ma"],
+    answer: "mgh"
+  },
+  {
+    question: "Which law explains why ships float?",
+    options: ["Archimedes' Principle", "Boyle's Law", "Newton's Law", "Ohm's Law"],
+    answer: "Archimedes' Principle"
+  },
+  {
+    question: "What is the SI unit of frequency?",
+    options: ["Hertz", "Newton", "Joule", "Watt"],
+    answer: "Hertz"
+  },
+  {
+    question: "What is the formula for momentum?",
+    options: ["Mass x Velocity", "Force x Distance", "Work/Time", "Energy/Charge"],
+    answer: "Mass x Velocity"
+  }
+];
+// ...existing code...
+
+let currentQuestion = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) {
+    score++;
+  }
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    showResult();
+  }
+});
+
+function showResult() {
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

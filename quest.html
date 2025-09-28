@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Question Bank with Explanations</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:linear-gradient(135deg,#0ea5e9,#3f88aa);
+      margin: 0; padding: 0;
+    }
+    header {
+      background: #004aad;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      margin-bottom: 15px;
+    }
+    .question h3 {
+      color: #004aad;
+    }
+    .explanation {
+      background: #f9f9f9;
+      border-left: 5px solid #004aad;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+    button {
+      background: #004aad;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0073e6;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Physics SS1 Question Bank</h1>
+    <p>Click “Show Explanation” to view detailed solutions</p>
+  </header>
+
+  <div class="container" id="questionBank"></div>
+
+  <script>
+    // Question bank with explanations
+    const questions = [
+      {
+        q: "1. A car moves 100 m in 20 seconds. What is its average speed?",
+        exp: "Speed = Distance ÷ Time = 100 ÷ 20 = 5 m/s"
+      },
+      {
+        q: "2. State Newton’s First Law of Motion.",
+        exp: "A body continues in its state of rest or uniform motion in a straight line unless acted upon by an external force. This is also known as the Law of Inertia."
+      },
+      {
+        q: "3. What is the difference between mass and weight?",
+        exp: "Mass is the quantity of matter in a body (measured in kilograms). Weight is the force of gravity acting on the mass (W = mg, measured in Newtons)."
+      },
+      {
+        q: "4. A force of 10 N moves an object 4 m in the direction of the force. Calculate the work done.",
+        exp: "Work = Force × Distance = 10 × 4 = 40 J (Joules)."
+      },
+      {
+        q: "5. State the principle of conservation of energy.",
+        exp: "Energy can neither be created nor destroyed; it can only change from one form to another, but the total energy remains constant."
+      }
+    ];
+
+    const container = document.getElementById("questionBank");
+
+    questions.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `
+        <h3>${item.q}</h3>
+        <button onclick="toggleExplanation(${index})">Show Explanation</button>
+        <div id="exp-${index}" class="explanation">${item.exp}</div>
+      `;
+      container.appendChild(div);
+    });
+
+    function toggleExplanation(index) {
+      const expDiv = document.getElementById(`exp-${index}`);
+      if (expDiv.style.display === "block") {
+        expDiv.style.display = "none";
+      } else {
+        expDiv.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

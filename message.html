@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Messages</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f9f9f9; padding:20px; }
+    .msg { padding:15px; margin:10px 0; border-radius:6px; background:#e3f2fd; }
+    .msg strong { color:#0d47a1; }
+  </style>
+</head>
+<body>
+  <h2>📩 Messages from Admin (via Email)</h2>
+  <div id="messages">Loading...</div>
+
+  <script>
+    async function loadMessages(){
+      const res = await fetch("http://localhost:5000/messages");
+      const data = await res.json();
+      const container = document.getElementById("messages");
+      container.innerHTML = "";
+      data.forEach(msg => {
+        let div = document.createElement("div");
+        div.classList.add("msg");
+        div.innerHTML = `<strong>${msg.header.from}</strong><br>
+                         <em>${msg.header.subject}</em><br>
+                         <small>${msg.header.date}</small><br>
+                         <p>${msg.body || ""}</p>`;
+        container.appendChild(div);
+      });
+    }
+    loadMessages();
+  </script>
+</body>
+</html>

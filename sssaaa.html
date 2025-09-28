@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Forum - LearnHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg,#0ea5e9,#4f46e5);
+      color:#fff;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    header{
+      background:rgba(0,0,0,0.4);
+      padding:15px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    header h1{font-size:1.3rem}
+    header a{
+      text-decoration:none;
+      color:#fff;
+      font-weight:600;
+      transition:0.3s;
+    }
+    header a:hover{color:#38bdf8}
+    .forum-container{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      padding:20px;
+    }
+    .welcome-message{
+      font-size:1.2rem;
+      margin-bottom:15px;
+      color:#ffd700;
+      font-weight:600;
+    }
+    .messages{
+      flex:1;
+      overflow-y:auto;
+      background:rgba(0,0,0,0.25);
+      border-radius:12px;
+      padding:15px;
+      margin-bottom:15px;
+    }
+    .message{
+      background:rgba(255,255,255,0.1);
+      padding:10px 15px;
+      border-radius:10px;
+      margin-bottom:12px;
+    }
+    .message strong{color:#38bdf8}
+    .meta{
+      font-size:0.8rem;
+      color:#cbd5e1;
+      margin-top:5px;
+    }
+    .input-area{
+      display:flex;
+      gap:10px;
+    }
+    .input-area input{
+      flex:1;
+      padding:12px;
+      border:none;
+      border-radius:8px;
+      font-size:1rem;
+      outline:none;
+    }
+    .input-area button{
+      padding:12px 20px;
+      border:none;
+      border-radius:8px;
+      background:#0ea5e9;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+    }
+    .input-area button:hover{background:#38bdf8}
+    /* Admin Clear Button */
+    .admin-btn{
+      margin-top:10px;
+      padding:10px 18px;
+      border:none;
+      border-radius:8px;
+      background:#ef4444;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+    }
+    .admin-btn:hover{background:#dc2626}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>💬 Student Forum</h1>
+    <a href="dashboard.html">⬅ Back to Dashboard</a>
+  </header>
+
+  <div class="forum-container">
+    <!-- Personalized Welcome -->
+    <div class="welcome-message" id="welcomeMessage"></div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="input-area">
+      <input type="text" id="messageInput" placeholder="Type your message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <!-- Admin Clear Button -->
+    <button class="admin-btn" id="clearBtn" style="display:none;" onclick="clearMessages()">🗑 Clear Chat History</button>
+  </div>
+
+  <script>
+    const messagesContainer = document.getElementById("messages");
+    const input = document.getElementById("messageInput");
+    const clearBtn = document.getElementById("clearBtn");
+
+    // ✅ Load current user
+    const currentUser = localStorage.getItem("currentUser");  
+    const name = localStorage.getItem("user_" + currentUser) || "Student";
+
+    // Define admin username (you can change this)
+    const adminUser = "Admin";
+
+    // Show welcome message
+    document.getElementById("welcomeMessage").textContent = `👋 Welcome, ${name}! Feel free to join the discussion.`;
+
+    // If admin, show clear button
+    if(name === adminUser){
+      clearBtn.style.display = "block";
+    }
+
+    // Load stored messages
+    let messages = JSON.parse(localStorage.getItem("forumMessages")) || [];
+
+    function renderMessages() {
+      messagesContainer.innerHTML = "";
+      messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.classList.add("message");
+        div.innerHTML = `
+          <strong>${msg.user}</strong>
+          <p>${msg.text}</p>
+          <div class="meta">🕒 ${msg.time}</div>
+        `;
+        messagesContainer.appendChild(div);
+      });
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function sendMessage() {
+      const text = input.value.trim();
+      if(text === "") return;
+
+      const now = new Date();
+      const timestamp = now.toLocaleString();
+
+      const msg = { user: name, text, time: timestamp };
+      messages.push(msg);
+      localStorage.setItem("forumMessages", JSON.stringify(messages));
+      input.value = "";
+      renderMessages();
+    }
+
+    // ✅ Admin can clear chat history
+    function clearMessages(){
+      if(confirm("Are you sure you want to clear all chat messages?")){
+        messages = [];
+        localStorage.setItem("forumMessages", JSON.stringify(messages));
+        renderMessages();
+      }
+    }
+
+    // Render on load
+    renderMessages();
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login</title>
+<style>
+body{display:flex;justify-content:center;align-items:center;height:100vh;background:#0ea5e9;font-family:Poppins,sans-serif;}
+.card{background:#fff;padding:30px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.2);text-align:center;}
+input{padding:10px;margin:10px 0;width:100%;border-radius:6px;border:1px solid #ccc;}
+button{padding:10px 20px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Admin Login</h2>
+  <input type="text" id="adminName" placeholder="Admin Name">
+  <input type="password" id="adminPass" placeholder="Password">
+  <button id="loginBtn">Login</button>
+</div>
+
+<script>
+const adminData = {name:"admin", password:"admin123"}; // Change credentials here
+
+document.getElementById('loginBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('adminName').value.trim();
+  const pass = document.getElementById('adminPass').value.trim();
+  if(name === adminData.name && pass === adminData.password){
+    localStorage.setItem('currentAdmin', name);
+    window.location.href = 'admin-dashboard.html';
+  }else{
+    alert('Invalid credentials');
+  }
+});
+</script>
+</body>
+</html>

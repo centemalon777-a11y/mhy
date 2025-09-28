@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnHub — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body { font-family:'Poppins',sans-serif; margin:0; padding:0; background: linear-gradient(135deg,#0ea5e9,#1e293b); color:#fff; }
+header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:rgba(0,0,0,0.4); }
+header h1 { font-size:1.8rem; color:#38bdf8; }
+nav { display:flex; justify-content:center; background:rgba(0,0,0,0.3); }
+nav button { background:transparent; border:none; color:#fff; padding:12px 20px; cursor:pointer; font-weight:600; transition:0.3s; }
+nav button.active, nav button:hover { background:rgba(0,0,0,0.5); border-radius:8px; }
+.container { max-width:1100px; margin:20px auto; padding:0 15px; }
+.section { display:none; }
+.section.active { display:block; }
+.card { background:rgba(0,0,0,0.25); padding:20px; border-radius:12px; margin-bottom:20px; }
+input, select { padding:8px; border-radius:6px; border:none; margin-bottom:10px; width:100%; }
+button.action-btn { padding:8px 12px; border:none; border-radius:6px; cursor:pointer; background:#0ea5e9; color:#fff; margin-right:5px; }
+button.action-btn:hover { background:#38bdf8; }
+ul { list-style:none; padding:0; }
+li { padding:8px; border-bottom:1px solid rgba(255,255,255,0.1); }
+.messages, .event-list, .leaderboard-list { max-height:300px; overflow:auto; margin-top:10px; border-radius:8px; background:rgba(0,0,0,0.15); padding:10px; }
+.msg { padding:6px; border-radius:6px; margin-bottom:6px; }
+.msg.admin { background:#0ea5e9; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Admin Panel</h1>
+</header>
+
+<nav>
+  <button class="nav-btn active" data-section="adminMessages">Send Messages</button>
+  <button class="nav-btn" data-section="adminEvents">Manage Events</button>
+  <button class="nav-btn" data-section="adminLeaderboard">Leaderboard</button>
+</nav>
+
+<div class="container">
+  <!-- Messages -->
+  <div class="section active" id="adminMessages">
+    <div class="card">
+      <h2>Send Message to Student</h2>
+      <select id="studentSelect">
+        <option value="">-- Select Student --</option>
+      </select>
+      <input type="text" id="messageText" placeholder="Type your message">
+      <button class="action-btn" id="sendMsgBtn">Send</button>
+      <div class="messages" id="sentMessages"></div>
+    </div>
+  </div>
+
+  <!-- Events -->
+  <div class="section" id="adminEvents">
+    <div class="card">
+      <h2>Add / Edit Events</h2>
+      <input type="text" id="eventTitle" placeholder="Event Title">
+      <input type="date" id="eventDate">
+      <button class="action-btn" id="addEventBtn">Add Event</button>
+      <ul id="eventsList"></ul>
+    </div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="section" id="adminLeaderboard">
+    <div class="card">
+      <h2>Update Leaderboard</h2>
+      <select id="studentLeaderboardSelect">
+        <option value="">-- Select Student --</option>
+      </select>
+      <input type="number" id="studentScore" placeholder="Score">
+      <button class="action-btn" id="updateScoreBtn">Update</button>
+      <div class="leaderboard-list" id="leaderboardDisplay"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== Navigation =====
+const navButtons = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.section');
+navButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    navButtons.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    sections.forEach(sec=>sec.classList.remove('active'));
+    document.getElementById(btn.dataset.section).classList.add('active');
+  });
+});
+
+// ===== Students List =====
+function getAllStudents(){
+  const users = Object.keys(localStorage).filter(k=>k.startsWith('user_'));
+  return users.map(u=>({email:u.replace('user_',''), name:JSON.parse(localStorage.getItem(u))?.name || u.replace('user_','')}));
+}
+
+const studentSelect = document.getElementById('studentSelect');
+const studentLeaderboardSelect = document.getElementById('studentLeaderboardSelect');
+
+function populateStudentOptions(){
+  const students = getAllStudents();
+  studentSelect.innerHTML = '<option value="">-- Select Student --</option>';
+  studentLeaderboardSelect.innerHTML = '<option value="">-- Select Student --</option>';
+  students.forEach(s=>{
+    studentSelect.innerHTML += `<option value="${s.email}">${s.name}</option>`;
+    studentLeaderboardSelect.innerHTML += `<option value="${s.email}">${s.name}</option>`;
+  });
+}
+populateStudentOptions();
+
+// ===== Send Message =====
+const sendMsgBtn = document.getElementById('sendMsgBtn');
+const messageText = document.getElementById('messageText');
+const sentMessages = document.getElementById('sentMessages');
+
+function renderSentMessages(){
+  sentMessages.innerHTML='';
+  const students = getAllStudents();
+  students.forEach(s=>{
+    const msgs = JSON.parse(localStorage.getItem('messages_'+s.email)||'[]');
+    msgs.forEach(m=>{
+      const div = document.createElement('div');
+      div.className='msg admin';
+      div.textContent = `${s.name}: ${m.text} (${new Date(m.ts).toLocaleString()})`;
+      sentMessages.appendChild(div);
+    });
+  });
+}
+
+sendMsgBtn.addEventListener('click', ()=>{
+  const studentEmail = studentSelect.value;
+  const text = messageText.value.trim();
+  if(!studentEmail || !text) return alert('Select student and enter message');
+  const key = 'messages_' + studentEmail;
+  const msgs = JSON.parse(localStorage.getItem(key)||'[]');
+  msgs.push({from:'Admin', text, ts:Date.now(), eventId:null});
+  localStorage.setItem(key, JSON.stringify(msgs));
+  messageText.value='';
+  renderSentMessages();
+});
+renderSentMessages();
+
+// ===== Events =====
+let events = JSON.parse(localStorage.getItem('events')||'[]');
+const eventListEl = document.getElementById('eventsList');
+const addEventBtn = document.getElementById('addEventBtn');
+function renderEvents(){
+  eventListEl.innerHTML='';
+  events.forEach(ev=>{
+    const li = document.createElement('li');
+    li.textContent = `${ev.title} - ${new Date(ev.date).toDateString()} (Registered: ${ev.registered ? ev.registered.length : 0})`;
+    eventListEl.appendChild(li);
+  });
+}
+renderEvents();
+
+addEventBtn.addEventListener('click', ()=>{
+  const title = document.getElementById('eventTitle').value.trim();
+  const date = document.getElementById('eventDate').value;
+  if(!title || !date) return alert('Enter title and date');
+  events.push({id:Date.now(), title, date, registered:[]});
+  localStorage.setItem('events', JSON.stringify(events));
+  document.getElementById('eventTitle').value='';
+  document.getElementById('eventDate').value='';
+  renderEvents();
+});
+
+// ===== Leaderboard =====
+const leaderboardDisplay = document.getElementById('leaderboardDisplay');
+const updateScoreBtn = document.getElementById('updateScoreBtn');
+const studentScore = document.getElementById('studentScore');
+
+function renderLeaderboard(){
+  const lb = JSON.parse(localStorage.getItem('leaderboard')||'{}');
+  leaderboardDisplay.innerHTML='';
+  Object.values(lb).sort((a,b)=>b.score-a.score).forEach(u=>{
+    const div = document.createElement('div');
+    div.textContent = `${u.name} - ${u.score}`;
+    leaderboardDisplay.appendChild(div);
+  });
+}
+renderLeaderboard();
+
+updateScoreBtn.addEventListener('click', ()=>{
+  const studentEmail = studentLeaderboardSelect.value;
+  const score = Number(studentScore.value);
+  if(!studentEmail || isNaN(score)) return alert('Select student and enter valid score');
+  const lb = JSON.parse(localStorage.getItem('leaderboard')||'{}');
+  const studentName = JSON.parse(localStorage.getItem('user_' + studentEmail))?.name || studentEmail;
+  lb[studentEmail] = {name: studentName, score};
+  localStorage.setItem('leaderboard', JSON.stringify(lb));
+  studentScore.value='';
+  renderLeaderboard();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards - Physics</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg,#0f766e,#0891b2,#38bdf8);
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .flashcards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .flashcard {
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .flashcard.flip .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      padding: 20px;
+      text-align: center;
+    }
+    .card-front {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid #38bdf8;
+    }
+    .card-back {
+      background: rgba(0,0,0,0.7);
+      border: 2px solid #22c55e;
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="flashcards-container" id="flashcards"></div>
+
+  <script>
+// ...existing code...
+const flashcardsData = [
+  { question: "What is Speed?", answer: "Speed is the distance covered per unit time. SI unit: m/s" },
+  { question: "What is Velocity?", answer: "Velocity is displacement per unit time in a specified direction." },
+  { question: "Newton’s First Law?", answer: "A body remains at rest or in uniform motion unless acted on by an external force." },
+  { question: "SI Unit of Force?", answer: "The SI unit of force is Newton (N)." },
+  { question: "What is Work?", answer: "Work = Force × Distance (in the direction of force). SI unit: Joule (J)." },
+  { question: "What is Power?", answer: "Power is the rate of doing work. SI unit: Watt (W)." },
+  { question: "What is Energy?", answer: "Energy is the ability to do work. SI unit: Joule (J)." },
+  { question: "What is Pressure?", answer: "Pressure = Force / Area. SI unit: Pascal (Pa)." },
+  { question: "What is Density?", answer: "Density = Mass / Volume. SI unit: kg/m³." },
+  { question: "What is Acceleration?", answer: "Acceleration is the rate of change of velocity. SI unit: m/s²." },
+  { question: "What is Momentum?", answer: "Momentum = Mass × Velocity. SI unit: kg·m/s." },
+  { question: "What is Heat?", answer: "Heat is a form of energy transferred due to temperature difference. SI unit: Joule (J)." },
+  { question: "What is Temperature?", answer: "Temperature measures the degree of hotness. SI unit: Kelvin (K)." },
+  { question: "What is Reflection of Light?", answer: "Reflection is the bouncing back of light from a surface." },
+  { question: "What is Refraction of Light?", answer: "Refraction is the bending of light as it passes from one medium to another." },
+  { question: "What is Sound?", answer: "Sound is a form of energy produced by vibrating objects. It travels as a longitudinal wave." },
+  { question: "What is Electric Current?", answer: "Electric current is the flow of electric charge. SI unit: Ampere (A)." },
+  { question: "What is Magnetism?", answer: "Magnetism is a force of attraction or repulsion due to moving electric charges." },
+  { question: "What is Elasticity?", answer: "Elasticity is the ability of a material to return to its original shape after deformation." },
+  { question: "What is a Simple Machine?", answer: "A simple machine is a device that makes work easier, e.g., lever, pulley, inclined plane." }
+];
+// ...existing code...
+
+    const flashcardsContainer = document.getElementById("flashcards");
+
+    flashcardsData.forEach(item => {
+      const card = document.createElement("div");
+      card.classList.add("flashcard");
+      card.innerHTML = `
+        <div class="card-inner">
+          <div class="card-front">${item.question}</div>
+          <div class="card-back">${item.answer}</div>
+        </div>
+      `;
+      card.addEventListener("click", () => {
+        card.classList.toggle("flip");
+      });
+      flashcardsContainer.appendChild(card);
+    });
+  </script>
+</body>
+</html>

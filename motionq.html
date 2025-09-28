@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background:linear-gradient(135deg, #0f766e, #0891b2, #38bdf8);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 14px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+      width: 80%;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0ea5e9;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button:hover { background: #38bdf8; }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option-btn:hover { background: #38bdf8; }
+    #next-btn { display: none; background: #22c55e; }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="welcome">Enter your name to start</h2>
+  <input type="text" id="studentName" placeholder="Enter your name" />
+  <button id="startBtn">Start Quiz</button>
+
+  <div id="quizSection" style="display:none;">
+    <div id="timer">Time left: 30:00</div>
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+  </div>
+</div>
+<script>
+  // ...existing code...
+const quizData = [
+  {
+    question: "What is motion?",
+    options: [
+      "Change in position of an object with time",
+      "Change in color of an object",
+      "Change in size of an object",
+      "Change in temperature of an object"
+    ],
+    answer: "Change in position of an object with time"
+  },
+  {
+    question: "Which of the following is a scalar quantity?",
+    options: ["Speed", "Velocity", "Displacement", "Acceleration"],
+    answer: "Speed"
+  },
+  {
+    question: "Which of the following is a vector quantity?",
+    options: ["Distance", "Speed", "Velocity", "Mass"],
+    answer: "Velocity"
+  },
+  {
+    question: "The SI unit of distance is?",
+    options: ["Meter", "Second", "Kilogram", "Newton"],
+    answer: "Meter"
+  },
+  {
+    question: "The SI unit of speed is?",
+    options: ["m/s", "m", "s", "kg"],
+    answer: "m/s"
+  },
+  {
+    question: "What is displacement?",
+    options: [
+      "Shortest distance between two points in a specific direction",
+      "Total path covered",
+      "Change in mass",
+      "Change in temperature"
+    ],
+    answer: "Shortest distance between two points in a specific direction"
+  },
+  {
+    question: "Which of the following is NOT a type of motion?",
+    options: ["Translational", "Rotational", "Vibrational", "Evaporational"],
+    answer: "Evaporational"
+  },
+  {
+    question: "Uniform motion means?",
+    options: [
+      "Constant speed in a straight line",
+      "Changing direction only",
+      "Changing speed only",
+      "No movement"
+    ],
+    answer: "Constant speed in a straight line"
+  },
+  {
+    question: "Non-uniform motion means?",
+    options: [
+      "Changing speed or direction",
+      "Constant speed",
+      "No movement",
+      "Constant direction"
+    ],
+    answer: "Changing speed or direction"
+  },
+  {
+    question: "The rate of change of velocity is called?",
+    options: ["Acceleration", "Speed", "Distance", "Displacement"],
+    answer: "Acceleration"
+  },
+  {
+    question: "The SI unit of acceleration is?",
+    options: ["m/s²", "m/s", "m", "s"],
+    answer: "m/s²"
+  },
+  {
+    question: "If a car travels 100 m in 5 s, its average speed is?",
+    options: ["20 m/s", "50 m/s", "10 m/s", "25 m/s"],
+    answer: "20 m/s"
+  },
+  {
+    question: "Which of the following is NOT a vector quantity?",
+    options: ["Distance", "Displacement", "Velocity", "Acceleration"],
+    answer: "Distance"
+  },
+  {
+    question: "What is the formula for speed?",
+    options: [
+      "Distance / Time",
+      "Time / Distance",
+      "Distance x Time",
+      "Velocity x Time"
+    ],
+    answer: "Distance / Time"
+  },
+  {
+    question: "What is the formula for acceleration?",
+    options: [
+      "(Final velocity - Initial velocity) / Time",
+      "Distance / Time",
+      "Velocity x Time",
+      "Time / Distance"
+    ],
+    answer: "(Final velocity - Initial velocity) / Time"
+  },
+  {
+    question: "A body returns to its starting point. Its displacement is?",
+    options: ["Zero", "Maximum", "Minimum", "Equal to distance"],
+    answer: "Zero"
+  },
+  {
+    question: "Which of the following is an example of periodic motion?",
+    options: [
+      "Pendulum swinging",
+      "Car moving on a straight road",
+      "Ball rolling down a hill",
+      "Person walking"
+    ],
+    answer: "Pendulum swinging"
+  },
+  {
+    question: "Which of the following is an example of rectilinear motion?",
+    options: [
+      "Train moving on a straight track",
+      "Fan blade rotating",
+      "Earth revolving around the sun",
+      "Pendulum swinging"
+    ],
+    answer: "Train moving on a straight track"
+  },
+  {
+    question: "Which of the following is an example of circular motion?",
+    options: [
+      "Fan blade rotating",
+      "Car moving on a straight road",
+      "Ball falling freely",
+      "Person walking"
+    ],
+    answer: "Fan blade rotating"
+  },
+  {
+    question: "The total length of the path covered by a moving object is called?",
+    options: ["Distance", "Displacement", "Speed", "Velocity"],
+    answer: "Distance"
+  },
+  {
+    question: "If a car moves at 60 km/h for 2 hours, the distance covered is?",
+    options: ["120 km", "30 km", "60 km", "100 km"],
+    answer: "120 km"
+  },
+  {
+    question: "The slope of a distance-time graph gives?",
+    options: ["Speed", "Acceleration", "Displacement", "Force"],
+    answer: "Speed"
+  },
+  {
+    question: "The slope of a velocity-time graph gives?",
+    options: ["Acceleration", "Speed", "Distance", "Displacement"],
+    answer: "Acceleration"
+  },
+  {
+    question: "If the velocity of an object is constant, its acceleration is?",
+    options: ["Zero", "Maximum", "Minimum", "Increasing"],
+    answer: "Zero"
+  },
+  {
+    question: "A body moving in a circle at constant speed has?",
+    options: [
+      "Changing velocity",
+      "Constant velocity",
+      "Zero acceleration",
+      "Zero speed"
+    ],
+    answer: "Changing velocity"
+  },
+  {
+    question: "Which of the following is NOT a type of motion?",
+    options: ["Oscillatory", "Translational", "Rotational", "Evaporational"],
+    answer: "Evaporational"
+  },
+  {
+    question: "The motion of the earth around the sun is?",
+    options: [
+      "Revolution",
+      "Rotation",
+      "Oscillation",
+      "Translation"
+    ],
+    answer: "Revolution"
+  },
+  {
+    question: "The motion of the earth about its axis is?",
+    options: [
+      "Rotation",
+      "Revolution",
+      "Oscillation",
+      "Translation"
+    ],
+    answer: "Rotation"
+  },
+  {
+    question: "A body is said to be at rest if?",
+    options: [
+      "It does not change its position with time",
+      "It moves with constant speed",
+      "It moves in a circle",
+      "It vibrates"
+    ],
+    answer: "It does not change its position with time"
+  },
+  {
+    question: "A body is said to be in motion if?",
+    options: [
+      "It changes its position with time",
+      "It remains stationary",
+      "It vibrates",
+      "It rotates"
+    ],
+    answer: "It changes its position with time"
+  },
+  {
+    question: "The shortest distance between two points is called?",
+    options: ["Displacement", "Distance", "Speed", "Velocity"],
+    answer: "Displacement"
+  },
+  {
+    question: "The area under a velocity-time graph represents?",
+    options: ["Displacement", "Speed", "Acceleration", "Force"],
+    answer: "Displacement"
+  },
+  {
+    question: "If a car accelerates from rest at 2 m/s² for 5 seconds, its final velocity is?",
+    options: ["10 m/s", "5 m/s", "2 m/s", "20 m/s"],
+    answer: "10 m/s"
+  },
+  {
+    question: "If a car moves with a speed of 30 m/s for 10 seconds, the distance covered is?",
+    options: ["300 m", "30 m", "3 m", "10 m"],
+    answer: "300 m"
+  },
+  {
+    question: "Which of the following is NOT a unit of speed?",
+    options: ["m/s", "km/h", "cm/s", "kg/m"],
+    answer: "kg/m"
+  },
+  {
+    question: "The motion of a pendulum is an example of?",
+    options: ["Oscillatory motion", "Translational motion", "Rotational motion", "Random motion"],
+    answer: "Oscillatory motion"
+  },
+  {
+    question: "The motion of a spinning top is an example of?",
+    options: ["Rotational motion", "Translational motion", "Oscillatory motion", "Random motion"],
+    answer: "Rotational motion"
+  },
+  {
+    question: "The motion of a car on a straight road is an example of?",
+    options: ["Translational motion", "Rotational motion", "Oscillatory motion", "Random motion"],
+    answer: "Translational motion"
+  },
+  {
+    question: "Which of the following is a random motion?",
+    options: ["Movement of gas molecules", "Car moving on a road", "Fan blade rotating", "Pendulum swinging"],
+    answer: "Movement of gas molecules"
+  },
+  {
+    question: "If a body covers equal distances in equal intervals of time, it is said to be in?",
+    options: ["Uniform motion", "Non-uniform motion", "Oscillatory motion", "Random motion"],
+    answer: "Uniform motion"
+  },
+  {
+    question: "If a body covers unequal distances in equal intervals of time, it is said to be in?",
+    options: ["Non-uniform motion", "Uniform motion", "Oscillatory motion", "Random motion"],
+    answer: "Non-uniform motion"
+  }
+];
+// ...existing code...
+
+let currentQuestion = 0;
+let score = 0;
+let student = "";
+let timer;
+let timeLeft = 1800; // 30 minutes in seconds
+
+const startBtn = document.getElementById("startBtn");
+const quizSection = document.getElementById("quizSection");
+const nameInput = document.getElementById("studentName");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const timerEl = document.getElementById("timer");
+
+startBtn.addEventListener("click", () => {
+  student = nameInput.value.trim();
+  if (student === "") {
+    alert("Please enter your name to start.");
+    return;
+  }
+  document.getElementById("welcome").textContent = `Good luck, ${student}!`;
+  nameInput.style.display = "none";
+  startBtn.style.display = "none";
+  quizSection.style.display = "block";
+  startTimer();
+  loadQuestion();
+});
+
+function loadQuestion() {
+  let q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.classList.add("option-btn");
+    btn.onclick = () => selectAnswer(opt);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected) {
+  let correct = quizData[currentQuestion].answer;
+  if (selected === correct) score++;
+  nextBtn.style.display = "inline-block";
+  Array.from(optionsEl.children).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) {
+      btn.style.background = "#22c55e";
+    } else if (btn.textContent === selected) {
+      btn.style.background = "#ef4444";
+    }
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    endQuiz();
+  }
+});
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerEl.textContent = `Time left: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  questionEl.textContent = "Quiz Completed!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+  let scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+  scores.push({
+    name: student,
+    topic: "Motion",
+    score: score,
+    total: quizData.length,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("quizScores", JSON.stringify(scores));
+}
+</script>
+</body>
+</html>

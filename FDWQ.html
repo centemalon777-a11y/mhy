@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnHub - Homepage</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:#f4f7fb;
+      color:#333;
+      line-height:1.6;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:15px 6%;
+      background:#0ea5e9;
+      color:#fff;
+      position:sticky;
+      top:0;
+      z-index:1000;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    }
+    .logo{font-size:1.7rem;font-weight:700}
+    nav ul{
+      display:flex;
+      list-style:none;
+      gap:20px;
+    }
+    nav a{
+      text-decoration:none;
+      color:#fff;
+      font-weight:600;
+      transition:0.3s;
+    }
+    nav a:hover{color:#e0f2fe}
+
+    .hero{
+      height:70vh;
+      background:linear-gradient(rgba(14,165,233,0.8),rgba(14,165,233,0.8)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1') no-repeat center/cover;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      color:#fff;
+      padding:0 10%;
+    }
+    .hero h1{font-size:3rem;margin-bottom:15px}
+    .hero p{font-size:1.2rem;margin-bottom:25px;max-width:700px}
+    .btn{
+      padding:14px 28px;border-radius:8px;border:none;
+      background:#fff;color:#0ea5e9;font-size:1rem;font-weight:600;
+      cursor:pointer;text-decoration:none;transition:0.3s;
+      box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    }
+    .btn:hover{background:#e0f2fe}
+
+    .sections{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:25px;
+      padding:60px 8%;
+    }
+    .card{
+      background:#fff;
+      padding:25px;
+      border-radius:14px;
+      text-align:center;
+      box-shadow:0 8px 20px rgba(0,0,0,0.1);
+      transition:0.3s;
+    }
+    .card:hover{transform:translateY(-8px)}
+    .card h3{margin-bottom:12px;color:#0ea5e9}
+    .card p{margin-bottom:10px;color:#555}
+    .card a{color:#0ea5e9;text-decoration:none;font-weight:600}
+
+    footer{
+      text-align:center;
+      padding:20px;
+      background:#0ea5e9;
+      color:#fff;
+      margin-top:40px;
+    }
+    #welcome-msg{
+      text-align:center;
+      font-size:2rem;
+      font-weight:600;
+      margin:30px 0;
+      color:#0ea5e9;
+    }
+
+    /* Floating action button */
+    .fab{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:#0ea5e9;
+      color:#fff;
+      border:none;
+      border-radius:50%;
+      width:60px;
+      height:60px;
+      font-size:1.6rem;
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,0.2);
+      transition:0.3s;
+    }
+    .fab:hover{background:#0284c7}
+
+    /* Responsive */
+    @media (max-width:768px){
+      .hero h1{font-size:2rem}
+      .hero p{font-size:1rem}
+      nav ul{flex-direction:column;gap:10px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">📘 LearnHub</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="ddes.html">Dashboard</a></li>
+        <li><a href="dfghjkl.html">Upcoming Test</a></li>
+        <li><a href="DDDS.html">Study</a></li>
+        <li><a href="vvvv.html">Student Portal</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Personalized Welcome -->
+  <div id="welcome-msg"></div>
+
+  <section class="hero">
+    <h1>Welcome to LearnHub 🎓</h1>
+    <p>Your trusted platform for learning, connecting, and growing academically.</p>
+    <a href="DDDS.html" class="btn">Get Started</a>
+  </section>
+
+  <section class="sections">
+    <div class="card">
+      <h3>📚 Study</h3>
+      <p>Explore lessons and topics across different fields.</p>
+      <a href="DDDS.html">Go to Subjects →</a>
+    </div>
+    <div class="card">
+      <h3>💬 Student Records</h3>
+      <p>Access and manage your academic records.</p>
+      <a href="portal.html">Open Records →</a>
+    </div>
+    <div class="card">
+      <h3>📖 Upcoming Events</h3>
+      <p>Stay updated with the latest events and activities.</p>
+      <a href="dfghjkl.html">View Events →</a>
+    </div>
+    <div class="card">
+      <h3>💡 Chat</h3>
+      <p>Talk with our chatbot for guidance and motivation.</p>
+      <a href="chat.html">Open Chat →</a>
+    </div>
+    <div class="card">
+      <h3>🛠 Tools</h3>
+      <p>Use study tools like calculators and reminders.</p>
+      <a href="sss.html">Open Tools →</a>
+    </div>
+    <div class="card">
+      <h3>🌐 Flash Cards</h3>
+      <p>Revise faster using interactive flashcards.</p>
+      <a href="FLASH.html">Open Flashcards →</a>
+    </div>
+    <div class="card">
+      <h3>⏱ Study Planner</h3>
+      <p>Create and manage your personalized study time.</p>
+      <a href="plan.html">Open Planner →</a>
+    </div>
+    <div class="card">
+      <h3>🎓 University Guidance</h3>
+      <p>Find courses and universities across Nigeria.</p>
+      <a href="college.html">Explore Guidance →</a>
+    </div>
+     <div class="card">
+      <h3>🎓 Question Bank</h3>
+      <p>Access a wide range of questions for practice.</p>
+      <a href="few.html">Explore Guidance →</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 LearnHub. All Rights Reserved.</p>
+  </footer>
+
+  <!-- Floating Action Button -->
+  <a href="chat.html"><button class="fab" onclick="alert('Just ask about motivation!')">💬</button></a>
+
+  <script>
+    // Show personalized greeting from localStorage
+    const currentUser = localStorage.getItem('currentUser');
+    const welcomeMsg = document.getElementById('welcome-msg');
+    if(currentUser){
+        const userData = JSON.parse(localStorage.getItem('user_' + currentUser));
+        if(userData) welcomeMsg.textContent = `Welcome back, ${userData.name}!`;
+    }
+  </script>
+</body>
+</html>

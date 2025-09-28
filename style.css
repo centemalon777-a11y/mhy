@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; background:#f4f4f9; padding:20px; }
+h2, h3 { color:#0d47a1; }
+form { margin:20px 0; }
+input, textarea { width:100%; padding:10px; margin:5px 0; border:1px solid #ccc; border-radius:5px; }
+button { background:#0d47a1; color:white; border:none; padding:10px 15px; border-radius:5px; cursor:pointer; }
+button:hover { background:#1976d2; }
+.msg { background:#fff; padding:10px; margin:10px 0; border-radius:5px; }
+.msg strong { color:#0d47a1; }
